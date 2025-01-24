@@ -5,3 +5,4 @@ pandas
 streamlit
 requests
 beautifulsoup4
+lightgbm
