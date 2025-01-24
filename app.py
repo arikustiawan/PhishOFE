@@ -1,12 +1,19 @@
 import streamlit as st
 import joblib
-from feature import FeatureExtraction
 import pandas as pd
+from feature import FeatureExtraction
 
 # Load the trained model
-model = joblib.load("model.pkl")
+try:
+    model = joblib.load("model.pkl")
+except FileNotFoundError:
+    st.error("Model file not found. Please ensure 'model.pkl' is in the same directory.")
+    st.stop()
+except Exception as e:
+    st.error(f"Error loading the model: {e}")
+    st.stop()
 
-# Page Config
+# Set up the Streamlit app
 st.set_page_config(page_title="Phishing URL Detection", layout="centered")
 st.title("Phishing URL Detection Using Machine Learning")
 
@@ -20,10 +27,10 @@ if st.button("Check URL"):
             # Extract features using the FeatureExtraction class
             extractor = FeatureExtraction(url_input)
             features = extractor.getFeaturesList()
-            
+
             # Convert features to a DataFrame (expected input format for the model)
             feature_names = [
-                "isHttps", "isDomainIp", "tld", "URLlength", "NoOfSubdomain",
+                "URL", "isHttps", "isDomainIp", "tld", "URLlength", "NoOfSubdomain",
                 "NoOfDots", "NoOfObfuscatedChar", "NoOfEqual", "NoOfQmark", "NoOfAmp", 
                 "NoOfDigits", "LineLength", "hasTitle", "hasMeta", "hasFavicon", 
                 "hasExternalFormSubmit", "hasCopyright", "hasSocialNetworking", 
@@ -42,7 +49,7 @@ if st.button("Check URL"):
             result = "Legitimate" if prediction == 0 else "Phishing"
             st.success(f"The URL is classified as: **{result}**")
         except Exception as e:
-            st.error(f"An error occurred: {e}")
+            st.error(f"An error occurred during feature extraction or prediction: {e}")
     else:
         st.warning("Please enter a URL.")
 
