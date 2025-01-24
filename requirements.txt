@@ -1,0 +1,5 @@
+joblib
+requests
+beautifulsoup4
+pandas
+streamlit
