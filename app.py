@@ -74,8 +74,8 @@ if st.button("Check URL"):
             st.write(y_pro_non_phishing)
             
             # Display the result
-            pred = "It is {0:.2f} % ".format(y_pro_phishing*100)
-            pred2 = "It is {0:.2f} %  ".format(y_pro_non_phishing*100)
+            pred = y_pro_phishing*100
+            pred2 = y_pro_non_phishing*100
             st.success({pred})
             st.success({pred2})
             result = "Phishing" if pred >= 99 else "Legitimate"
