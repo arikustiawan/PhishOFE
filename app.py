@@ -22,8 +22,10 @@ st.set_page_config(page_title="Phishing URL Detection", layout="wide")
 st.markdown(
     """
     <style>
-    .resized-text-input input {
-        width: 100px !important; /* Adjust the width here */
+    .center-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     </style>
     """,
@@ -68,8 +70,9 @@ url_input = st.text_input(
     key="url_input",
     help="This is a custom input box"
 )
-
+st.markdown('<div class="center-button">', unsafe_allow_html=True)
 if st.button("CHECK", type="primary"):
+    st.markdown('</div>', unsafe_allow_html=True)
     if url_input:
         try:
             # Extract features using the FeatureExtraction class
