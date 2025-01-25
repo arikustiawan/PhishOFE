@@ -18,6 +18,7 @@ class FeatureExtraction:
     features = []
     def __init__(self,url):
         self.features = []
+        #self.features = pd.DataFrame()
         self.url = url
         self.domain = ""
         self.whois_response = ""
@@ -321,5 +322,8 @@ class FeatureExtraction:
         return interactive_element_density
 
     def getFeaturesList(self):
-        self.features = self.features.apply(lambda x: d[x.name].fit_transform(x))
-        return self.features
+        df = pd.DataFrame(self.features)
+        d = defaultdict(LabelEncoder)
+        df = df.apply(lambda x: d[x.name].fit_transform(x))
+        #self.features = self.features.apply(lambda x: d[x.name].fit_transform(x))
+        return df
