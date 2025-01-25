@@ -47,7 +47,7 @@ if st.button("Check URL"):
             st.dataframe(df)
 
             st.write("Label Encoder")
-            #d = defaultdict(LabelEncoder)
+            d = defaultdict(LabelEncoder)
             #label_encoder = LabelEncoder()
             #df_encoded = label_encoder.fit_transform(df['TLD'])
             #df_encoded = df.apply(lambda x: d[x.name].fit_transform(x) if x.dtype == 'object' else x)
