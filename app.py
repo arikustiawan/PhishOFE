@@ -21,6 +21,10 @@ st.set_page_config(page_title="Phishing URL Detection", layout="centered")
 # Custom CSS styling to make the header and footer full width, center the content
 st.markdown(
     """
+   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing URL Detection</title>
     <style>
         body {
             margin: 0;
@@ -29,8 +33,9 @@ st.markdown(
             display: flex;
             flex-direction: column;
             align-items: center;
+            height: 100vh;
         }
-
+        
         header {
             width: 100%;
             background-color: #004b93;
@@ -40,23 +45,39 @@ st.markdown(
             justify-content: space-between;
             padding: 10px 20px;
             box-sizing: border-box;
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
         }
-
+        
         header h1 {
             margin: 0;
             font-size: 1.5rem;
         }
-
+        
+        header .logo {
+            display: flex;
+            align-items: center;
+            
+        }
+        header .logo img {
+            height: 40px;
+            margin-right: 10px;
+            background-color: white;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        header .menu {
+            display: flex;
+            gap: 15px;
+        }
+        
         header .menu a {
             color: white;
             text-decoration: none;
             font-size: 1rem;
-            margin-right: 15px;
         }
-
+        
         .container {
             text-align: center;
             background-color: #dde5e8;
@@ -65,25 +86,55 @@ st.markdown(
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin: auto;
-            margin-top: 100px;
+            margin-top: calc(50vh - 150px);
         }
-
+        
         .container h2 {
             font-size: 1.25rem;
             color: #004b93;
         }
-
+        
+        .container input {
+            width: 80%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .container button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #004b93;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .container button:hover {
+            background-color: #003766;
+        }
+        
         footer {
             width: 100%;
             background-color: #004b93;
             color: white;
             text-align: center;
             padding: 10px 0;
-            position: fixed;
+            position: absolute;
             bottom: 0;
             left: 0;
         }
+        
+        footer p {
+            margin: 0;
+        }
+
     </style>
+</head>
     """,
     unsafe_allow_html=True,
 )
@@ -91,6 +142,7 @@ st.markdown(
 # Header section
 st.markdown(
     """
+    <body>
     <header>
         <div class="logo">
             <img src="logo.jpg" alt="MMU Logo">
@@ -157,6 +209,7 @@ st.markdown(
     <footer>
         <p>Developed by Ari Kustiawan</p>
     </footer>
+    </body>
     """,
     unsafe_allow_html=True,
 )
