@@ -13,7 +13,7 @@ except FileNotFoundError:
     st.error("Model file not found. Please ensure 'model.pkl' is in the same directory.")
     st.stop()
 except Exception as e:
-    st.error("Error loading the model: {e}")
+    st.error(f"Error loading the model: {e}")
     st.stop()
 
 # Set up the Streamlit app
@@ -83,4 +83,19 @@ if st.button("Check URL"):
             else:
                 st.success(f"The URL is classified as: **{result}**")
         except Exception as e:
-            st.error(f"An error occurred during feature extraction or pr
+            st.error(f"An error occurred during feature extraction or prediction: {e}")
+    else:
+        st.warning("Please enter a URL.")
+
+# Footer
+st.markdown(
+    """
+    <style>
+    footer {visibility: hidden;}
+    </style>
+    <footer>
+    <p>Developed by Ari Kustiawan</p>
+    </footer>
+    """,
+    unsafe_allow_html=True,
+)
