@@ -30,7 +30,7 @@ if st.button("Check URL"):
 
             # Convert features to a DataFrame (expected input format for the model)
             feature_names = [
-                "URL", "isHttps", "isDomainIp", "tld", "URLlength", "NoOfSubdomain",
+                "isHttps", "isDomainIp", "tld", "URLlength", "NoOfSubdomain",
                 "NoOfDots", "NoOfObfuscatedChar", "NoOfEqual", "NoOfQmark", "NoOfAmp", 
                 "NoOfDigits", "LineLength", "hasTitle", "hasMeta", "hasFavicon", 
                 "hasExternalFormSubmit", "hasCopyright", "hasSocialNetworking", 
