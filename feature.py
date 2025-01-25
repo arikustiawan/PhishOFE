@@ -330,5 +330,5 @@ class FeatureExtraction:
         # Apply LabelEncoder to each column and collect features
         #encoded_data = data.apply(lambda col: d[col.name].fit_transform(col))
         #self.features = encoded_data.values.tolist()
-        st.write("getFeaturesList ok")
+        print("getFeaturesList ok")
         return self.features
