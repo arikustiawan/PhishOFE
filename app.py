@@ -15,71 +15,66 @@ except Exception as e:
     st.error(f"Error loading the model: {e}")
     st.stop()
 
-# Set up Streamlit page
+# Set up Streamlit page configuration
 st.set_page_config(page_title="Phishing URL Detection", layout="wide")
 
-# Custom CSS for the design
+# Custom CSS to match the design
 st.markdown(
     """
     <style>
         body {
-            margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f0f4f5;
+            margin: 0;
+            padding: 0;
+            background-color: #e6e6e6;
         }
         header {
             width: 100%;
             background-color: #004b93;
+            padding: 10px 20px;
             color: white;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 10px 20px;
-            box-sizing: border-box;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
+            align-items: center;
         }
         header .logo {
             display: flex;
             align-items: center;
         }
         header .logo img {
-            height: 40px;
+            height: 50px;
             margin-right: 10px;
-            background-color: white;
-            padding: 5px;
-            border-radius: 5px;
         }
         header h1 {
             font-size: 1.5rem;
             margin: 0;
         }
-        header .menu {
+        nav {
             display: flex;
-            gap: 15px;
+            gap: 20px;
         }
-        header .menu a {
+        nav a {
             color: white;
             text-decoration: none;
             font-size: 1rem;
         }
-        header .menu a:hover {
+        nav a:hover {
             text-decoration: underline;
         }
         .container {
-            background-color: #dde5e8;
             width: 60%;
-            margin: 100px auto;
+            margin: auto;
+            margin-top: 15vh;
+            background-color: #f0f4f5;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .container h2 {
             font-size: 1.25rem;
             color: #004b93;
+            margin-bottom: 20px;
         }
         .container input {
             width: 80%;
@@ -87,14 +82,14 @@ st.markdown(
             font-size: 1rem;
             border: 1px solid #ccc;
             border-radius: 5px;
-            margin: 20px 0;
+            margin-bottom: 20px;
         }
         .container button {
-            padding: 10px 20px;
-            font-size: 1rem;
             background-color: #004b93;
             color: white;
             border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
             border-radius: 5px;
             cursor: pointer;
         }
@@ -109,25 +104,21 @@ st.markdown(
             padding: 10px 0;
             position: fixed;
             bottom: 0;
-            left: 0;
-        }
-        footer p {
-            margin: 0;
         }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Header section
+# Navigation bar
 st.markdown(
     """
     <header>
         <div class="logo">
-            <img src="https://github.com/kodthink/PhishingURL/blob/cf1a65e1a3443f0c05e4980478d3e3993235aa77/logo.jpg" alt="MMU Logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/MMU_Logo.png" alt="MMU Logo">
             <h1>PHISHING URL DETECTION USING MACHINE LEARNING</h1>
         </div>
-        <nav class="menu">
+        <nav>
             <a href="#">Upload Dataset</a>
             <a href="#">Predict URL</a>
             <a href="#">Performance Analysis</a>
@@ -137,7 +128,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Input Section
+# Main container for URL input and results
 st.markdown(
     """
     <div class="container">
@@ -149,7 +140,7 @@ st.markdown(
 
 url_input = st.text_input("", placeholder="Enter URL here", label_visibility="collapsed")
 
-# Check URL Section
+# URL checking button
 if st.button("CHECK"):
     if url_input:
         try:
