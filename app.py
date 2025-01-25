@@ -48,17 +48,14 @@ if st.button("Check URL"):
 
             st.write("Label Encoder")
             d = defaultdict(LabelEncoder)
+            df_encoded = df.apply(lambda x: d[x.name].fit_transform(x))
             #label_encoder = LabelEncoder()
             #df_encoded = label_encoder.fit_transform(df['TLD'])
             #df_encoded = df.apply(lambda x: d[x.name].fit_transform(x) if x.dtype == 'object' else x)
             #df_encoded =  extractor.getLabelEncoder(df)
             #df_encoded = extractor.getLabelEncoder()
-            categorical_columns = df.select_dtypes(include=['object']).columns  # Identify categorical columns
+            #categorical_columns = df.select_dtypes(include=['object']).columns  # Identify categorical columns
 
-            df_encoded = df.copy()  # Create a copy to keep the original intact
-            df_encoded[categorical_columns] = df[categorical_columns].apply(
-            lambda x: d[x.name].fit_transform(x) if x.nunique() > 1 else 0
-            )
             x = df_encoded.to_numpy()
             st.dataframe(df_encoded)
             
