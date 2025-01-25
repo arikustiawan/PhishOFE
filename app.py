@@ -15,116 +15,124 @@ except Exception as e:
     st.error(f"Error loading the model: {e}")
     st.stop()
 
-# Set up the Streamlit app
-st.set_page_config(page_title="Phishing URL Detection", layout="wide", page_icon="🌐")
+# Set up Streamlit page
+st.set_page_config(page_title="Phishing URL Detection", layout="wide")
 
-# Custom CSS for full-page design
+# Custom CSS for the design
 st.markdown(
     """
     <style>
         body {
-            background-color: #f5f5f5;
             margin: 0;
-            padding: 0;
-        }
-        .reportview-container {
-            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f5;
         }
         header {
-            visibility: hidden;
-        }
-        .main {
-            padding: 0 !important;
-        }
-        .nav-bar {
-            background-color: #003366;
-            padding: 15px 0;
-            text-align: center;
-        }
-        .nav-bar img {
-            height: 60px;
-        }
-        .nav-bar h1 {
-            display: inline-block;
+            width: 100%;
+            background-color: #004b93;
             color: white;
-            font-size: 24px;
-            vertical-align: middle;
-            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
         }
-        .nav-links {
-            margin-top: 10px;
+        header .logo {
+            display: flex;
+            align-items: center;
         }
-        .nav-links a {
+        header .logo img {
+            height: 40px;
+            margin-right: 10px;
+            background-color: white;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        header h1 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        header .menu {
+            display: flex;
+            gap: 15px;
+        }
+        header .menu a {
             color: white;
             text-decoration: none;
-            margin: 0 15px;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 1rem;
         }
-        .nav-links a:hover {
+        header .menu a:hover {
             text-decoration: underline;
         }
-        .input-section {
+        .container {
+            background-color: #dde5e8;
+            width: 60%;
+            margin: 100px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
-            margin-top: 50px;
         }
-        .input-section input {
-            width: 40%;
-            height: 40px;
-            font-size: 18px;
-            padding: 5px;
+        .container h2 {
+            font-size: 1.25rem;
+            color: #004b93;
         }
-        .input-section button {
-            background-color: #0066cc;
+        .container input {
+            width: 80%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .container button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #004b93;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
+            border-radius: 5px;
             cursor: pointer;
         }
-        .input-section button:hover {
-            background-color: #004d99;
-        }
-        .result-section {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .success {
-            color: green;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .warning {
-            color: red;
-            font-size: 20px;
-            font-weight: bold;
+        .container button:hover {
+            background-color: #003766;
         }
         footer {
-            background-color: #003366;
+            width: 100%;
+            background-color: #004b93;
             color: white;
             text-align: center;
             padding: 10px 0;
             position: fixed;
             bottom: 0;
-            width: 100%;
+            left: 0;
+        }
+        footer p {
+            margin: 0;
         }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Navigation Bar
+# Header section
 st.markdown(
     """
-    <div class="nav-bar">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/MMU_Logo.png" alt="MMU Logo">
-        <h1>PHISHING URL DETECTION USING MACHINE LEARNING</h1>
-        <div class="nav-links">
-            <a href="#upload-dataset">Upload Dataset</a>
-            <a href="#predict-url">Predict URL</a>
-            <a href="#performance-analysis">Performance Analysis</a>
+    <header>
+        <div class="logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/MMU_Logo.png" alt="MMU Logo">
+            <h1>PHISHING URL DETECTION USING MACHINE LEARNING</h1>
         </div>
-    </div>
+        <nav class="menu">
+            <a href="#">Upload Dataset</a>
+            <a href="#">Predict URL</a>
+            <a href="#">Performance Analysis</a>
+        </nav>
+    </header>
     """,
     unsafe_allow_html=True,
 )
@@ -132,28 +140,24 @@ st.markdown(
 # Input Section
 st.markdown(
     """
-    <div class="input-section">
+    <div class="container">
         <h2>ENTER URL:</h2>
-        <form action="" method="get">
-            <input type="text" placeholder="https://example.com" id="url-input" name="url-input">
-            <button type="submit">CHECK</button>
-        </form>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
-url_input = st.text_input("", placeholder="Enter a URL here", label_visibility="collapsed")
+url_input = st.text_input("", placeholder="Enter URL here", label_visibility="collapsed")
 
 # Check URL Section
 if st.button("CHECK"):
     if url_input:
         try:
-            # Extract features using the FeatureExtraction class
+            # Feature extraction
             extractor = FeatureExtraction(url_input)
             features = extractor.getFeaturesList()
 
-            # Convert features to a DataFrame
+            # Create DataFrame
             feature_names = [
                 'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar',
                 'NoOfEqual', 'NoOfQmark', 'NoOfAmp', 'NoOfDigits', 'LineLength', 'HasTitle',
@@ -165,27 +169,21 @@ if st.button("CHECK"):
             obj = np.array(features).reshape(1, len(feature_names))
             df = pd.DataFrame(obj, columns=feature_names)
 
-            # Encode the TLD column
+            # Encode TLD column
             tld_encoder = LabelEncoder()
             df['TLD'] = tld_encoder.fit_transform(df['TLD'])
             x = df.to_numpy()
 
-            # Predict using the model
+            # Prediction
             y_prob_phishing = model.predict_proba(x)[0, 1]
 
-            # Display the result
+            # Display result
             if y_prob_phishing >= 0.99:
-                st.markdown(
-                    "<div class='result-section warning'>URL does not look secure! It might be harmful and unsafe to visit.</div>",
-                    unsafe_allow_html=True,
-                )
+                st.warning("URL does not look secure! It might be harmful and unsafe to visit.")
             else:
-                st.markdown(
-                    "<div class='result-section success'>URL looks secure and safe to visit.</div>",
-                    unsafe_allow_html=True,
-                )
+                st.success("URL looks secure and safe to visit.")
         except Exception as e:
-            st.error(f"An error occurred during feature extraction or prediction: {e}")
+            st.error(f"An error occurred during prediction: {e}")
     else:
         st.warning("Please enter a URL.")
 
