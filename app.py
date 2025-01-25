@@ -36,7 +36,7 @@ st.markdown(
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: fixed;
+            
         }
         header .logo {
             display: flex;
@@ -100,9 +100,9 @@ st.markdown(
             color: white;
             text-align: center;
             padding: 10px 0;
-            position: fixed;
+           
             bottom: 0;
-            display: flex;
+       
         }
     </style>
     """,
