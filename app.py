@@ -36,10 +36,10 @@ st.markdown(
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: fixed; /* Fix the header at the top */
-            top: 5; /* Stick it to the top */
-            left: 0; /* Align it with the left edge */
-            z-index: 1000; /* Ensure it stays above other content */
+            position: fixed; 
+            top: 5; 
+            left: 0; 
+            z-index: 1000; 
         }
         header .logo {
             display: flex;
@@ -70,7 +70,7 @@ st.markdown(
             justify-content: center; /* Center items horizontally */
             align-items: center; /* Center items vertically */
             text-align: center; /* Optional: Center-align text inside */
-            
+            argin-top: 60px;
         }
         .container h2 {
             font-size: 1.25rem;
