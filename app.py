@@ -47,8 +47,9 @@ if st.button("Check URL"):
             st.dataframe(df)
 
             st.write("Label Encoder")
-            d = defaultdict(LabelEncoder)
-            df_encoded = df.apply(lambda x: d[x.name].fit_transform(x) if x.dtype == 'object' else x)
+            #d = defaultdict(LabelEncoder)
+            #df_encoded = df.apply(lambda x: d[x.name].fit_transform(x) if x.dtype == 'object' else x)
+            df_encoded =  extractor.getLabelEncode(df)
             x = df_encoded .to_numpy()
             st.dataframe(df_encoded )
             
