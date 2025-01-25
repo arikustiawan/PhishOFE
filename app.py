@@ -68,8 +68,8 @@ if st.button("Check URL"):
             y = model.predict(x)
             st.write("predict: ",y)
 
-            y_pro_phishing = model.predict_proba(x)[0,0]
-            y_pro_non_phishing = model.predict_proba(x)[0,1]
+            y_pro_phishing = model.predict_proba(x)[0,1]
+            y_pro_non_phishing = model.predict_proba(x)[0,0]
             st.write(y_pro_phishing)
             st.write(y_pro_non_phishing)
             
@@ -78,8 +78,8 @@ if st.button("Check URL"):
             pred2 = "It is {0:.2f} %  ".format(y_pro_non_phishing*100)
             st.success({pred})
             st.success({pred2})
-            result = "Legitimate" if y_pro_non_phishing == 1 else "Phishing"
-            #st.success(f"The URL is classified as: **{result}**")
+            result = "Phishing" if y_pro_non_phishing >= 99 else "Legitimate"
+            st.success(f"The URL is classified as: **{result}**")
         except Exception as e:
             st.error(f"An error occurred during feature extraction or prediction: {e}")
     else:
