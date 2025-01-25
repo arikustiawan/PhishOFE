@@ -42,7 +42,7 @@ class FeatureExtraction:
 
 
         #URL Feature
-        #self.features.append(self.getURL())
+        self.features.append(self.getURL())
         self.features.append(self.isHttps())
         self.features.append(self.isDomainIp())
         self.features.append(self.tld())
