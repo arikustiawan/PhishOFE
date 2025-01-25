@@ -62,14 +62,7 @@ st.markdown(
             text-decoration: underline;
         }
         .container {
-            width: 60%;
-            margin: auto;
-            margin-top: 15vh;
-            background-color: #f0f4f5;
-            padding: 30px;
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
         }
         .container h2 {
             font-size: 1.25rem;
@@ -115,7 +108,6 @@ st.markdown(
     """
     <header>
         <div class="logo">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/MMU_Logo.png" alt="MMU Logo">
             <h1>PHISHING URL DETECTION USING MACHINE LEARNING</h1>
         </div>
         <nav>
