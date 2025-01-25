@@ -1,103 +1,189 @@
 import streamlit as st
+import joblib
+import pandas as pd
+import numpy as np
+from feature import FeatureExtraction
+from sklearn.preprocessing import LabelEncoder
 
-# Set the page configuration
-st.set_page_config(
-    page_title="Phishing URL Detection",
-    layout="centered",
-    initial_sidebar_state="collapsed"
-)
+# Load the trained model
+try:
+    model = joblib.load("model.pkl")
+except FileNotFoundError:
+    st.error("Model file not found. Please ensure 'model.pkl' is in the same directory.")
+    st.stop()
+except Exception as e:
+    st.error(f"Error loading the model: {e}")
+    st.stop()
 
-# Custom CSS for styling
+# Set up Streamlit page configuration
+st.set_page_config(page_title="Phishing URL Detection", layout="wide")
+
+# Custom CSS to match the design
 st.markdown(
     """
     <style>
-    .main-header {
-        background-color: #0056A3;
-        padding: 20px;
-        text-align: center;
-        color: white;
-        font-size: 22px;
-        font-weight: bold;
-    }
-    .sub-header {
-        color: #0056A3;
-        text-align: center;
-        font-size: 18px;
-        font-weight: bold;
-    }
-    .button-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
-    .custom-button button {
-        background-color: #0056A3 !important;
-        color: white !important;
-        font-size: 16px !important;
-        padding: 10px 20px !important;
-        border-radius: 5px !important;
-    }
-    .footer {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        background-color: #0056A3;
-        color: white;
-        text-align: center;
-        padding: 10px 0;
-        font-size: 14px;
-    }
-    .result-box {
-        text-align: center;
-        font-size: 16px;
-        font-weight: bold;
-        margin-top: 20px;
-        padding: 10px;
-        border-radius: 5px;
-    }
-    .secure {
-        color: green;
-        border: 2px solid green;
-        background-color: #eaffea;
-    }
-    .not-secure {
-        color: red;
-        border: 2px solid red;
-        background-color: #ffeaea;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e6e6e6;
+        }
+        header {
+            width: 100%;
+            background-color: #004b93;
+            padding: 10px 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header .logo {
+            display: flex;
+            align-items: center;
+        }
+        header .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+        header h1 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            width: 60%;
+            margin: auto;
+            margin-top: 15vh;
+            background-color: #f0f4f5;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            font-size: 1.25rem;
+            color: #004b93;
+            margin-bottom: 20px;
+        }
+        .container input {
+            width: 80%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .container button {
+            background-color: #004b93;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .container button:hover {
+            background-color: #003766;
+        }
+        footer {
+            width: 100%;
+            background-color: #004b93;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+        }
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
-
-# Header section
-st.markdown('<div class="main-header">PHISHING URL DETECTION USING MACHINE LEARNING</div>', unsafe_allow_html=True)
 
 # Navigation bar
 st.markdown(
     """
-    <div style="display: flex; justify-content: center; gap: 20px; margin: 10px 0; font-size: 16px; font-weight: bold;">
-        <a href="#" style="color: #0056A3; text-decoration: none;">Upload Dataset</a>
-        <a href="#" style="color: #0056A3; text-decoration: none;">Predict URL</a>
-        <a href="#" style="color: #0056A3; text-decoration: none;">Performance Analysis</a>
-    </div>
+    <header>
+        <div class="logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/MMU_Logo.png" alt="MMU Logo">
+            <h1>PHISHING URL DETECTION USING MACHINE LEARNING</h1>
+        </div>
+        <nav>
+            <a href="#">Upload Dataset</a>
+            <a href="#">Predict URL</a>
+            <a href="#">Performance Analysis</a>
+        </nav>
+    </header>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
-# Input section
-st.markdown('<div class="sub-header">ENTER URL:</div>', unsafe_allow_html=True)
+# Main container for URL input and results
+st.markdown(
+    """
+    <div class="container">
+        <h2>ENTER URL:</h2>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
 url_input = st.text_input("", placeholder="Enter URL here", label_visibility="collapsed")
 
-# Button section
-st.markdown('<div class="button-container custom-button">', unsafe_allow_html=True)
+# URL checking button
 if st.button("CHECK"):
-    # Example logic for URL detection
-    if "facebook.com" in url_input:
-        st.markdown('<div class="result-box secure">URL looks secure!<br>and safe to visit.</div>', unsafe_allow_html=True)
-    else:
-        st.markdown('<div class="result-box not-secure">URL does not look secure!<br>It might be harmful and unsafe to visit.</div>', unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
+    if url_input:
+        try:
+            # Feature extraction
+            extractor = FeatureExtraction(url_input)
+            features = extractor.getFeaturesList()
 
-# Footer section
-st.markdown('<div class="footer">Developed by Ari Kustiawan</div>', unsafe_allow_html=True)
+            # Create DataFrame
+            feature_names = [
+                'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar',
+                'NoOfEqual', 'NoOfQmark', 'NoOfAmp', 'NoOfDigits', 'LineLength', 'HasTitle',
+                'HasMeta', 'HasFavicon', 'HasExternalFormSubmit', 'HasCopyright', 'HasSocialNetworking',
+                'HasPasswordField', 'HasSubmitButton', 'HasKeywordBank', 'HasKeywordPay', 'HasKeywordCrypto',
+                'NoOfPopup', 'NoOfiFrame', 'NoOfImage', 'NoOfJS', 'NoOfCSS', 'NoOfURLRedirect',
+                'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
+            ]
+            obj = np.array(features).reshape(1, len(feature_names))
+            df = pd.DataFrame(obj, columns=feature_names)
+
+            # Encode TLD column
+            tld_encoder = LabelEncoder()
+            df['TLD'] = tld_encoder.fit_transform(df['TLD'])
+            x = df.to_numpy()
+
+            # Prediction
+            y_prob_phishing = model.predict_proba(x)[0, 1]
+
+            # Display result
+            if y_prob_phishing >= 0.99:
+                st.warning("URL does not look secure! It might be harmful and unsafe to visit.")
+            else:
+                st.success("URL looks secure and safe to visit.")
+        except Exception as e:
+            st.error(f"An error occurred during prediction: {e}")
+    else:
+        st.warning("Please enter a URL.")
+
+# Footer
+st.markdown(
+    """
+    <footer>
+        <p>Developed by Ari Kustiawan</p>
+    </footer>
+    """,
+    unsafe_allow_html=True,
+)
