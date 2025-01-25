@@ -49,9 +49,9 @@ if st.button("Check URL"):
 
             st.write("Label Encoder")
             d = defaultdict(LabelEncoder)
-            df = df.apply(lambda x: d[x.name].fit_transform(x))
+            dfl = df.apply(lambda col: d[col.name].fit_transform(col))
             x = df.to_numpy()
-            st.dataframe(df)
+            st.dataframe(dfl)
             
             # Use the model to predict
             y = model.predict(x)[0] 
