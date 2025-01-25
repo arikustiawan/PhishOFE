@@ -100,7 +100,7 @@ st.markdown(
             color: white;
             text-align: center;
             padding: 10px 0;
-           
+            possition: bottom;
             bottom: 0;
        
         }
