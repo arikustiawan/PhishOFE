@@ -51,9 +51,14 @@ if st.button("Check URL"):
 
             test = df.to_numpy()
             # Use the model to predict
-            prediction = model.predict(test)[0] 
+            y = model.predict(test)[0] 
             st.write("predict ok")
-            st.write(prediction)
+
+            y_pro_phishing = model.predict_proba(x)[0,0]
+            y_pro_non_phishing = model.predict_proba(x)[0,1]
+            st.write(y_pro_phishing)
+            st.write(y_pro_non_phishing)
+            
             # Display the result
             result = "Legitimate" if prediction == 0 else "Phishing"
             st.success(f"The URL is classified as: **{result}**")
