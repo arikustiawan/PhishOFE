@@ -18,7 +18,7 @@ class FeatureExtraction:
     features = []
     def __init__(self,url):
         self.features = []
-        #self.features = pd.DataFrame()
+        self.df = pd.DataFrame()
         self.url = url
         self.domain = ""
         self.whois_response = ""
@@ -26,6 +26,7 @@ class FeatureExtraction:
         self.response = None
         self.soup = ""
         self.d = defaultdict(LabelEncoder)
+        
 
         try:
             self.response = requests.get(url)
@@ -332,3 +333,16 @@ class FeatureExtraction:
         #self.features = encoded_data.values.tolist()
         #print("getFeaturesList ok")
         return self.features
+
+    def getLabelEncode(self):
+        #df = pd.DataFrame(self.features)
+        d = defaultdict(LabelEncoder)
+        #df = df.apply(lambda x: d[x.name].fit_transform(x))
+        self.df = self.apply(lambda x: d[x.name].fit_transform(x))
+        #data = pd.DataFrame(self.features)
+        # Apply LabelEncoder to each column and collect features
+        #encoded_data = data.apply(lambda col: d[col.name].fit_transform(col))
+        #self.features = encoded_data.values.tolist()
+        #print("getFeaturesList ok")
+        
+        return self.df
