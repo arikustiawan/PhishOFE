@@ -26,6 +26,7 @@ if st.button("Check URL"):
         try:
             # Extract features using the FeatureExtraction class
             extractor = FeatureExtraction(url_input)
+            st.write("extractor ok")
             features = extractor.getFeaturesList()
 
             # Convert features to a DataFrame (expected input format for the model)
