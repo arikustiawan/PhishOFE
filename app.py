@@ -28,7 +28,7 @@ if st.button("Check URL"):
             extractor = FeatureExtraction(url_input)
             st.write("extractor ok")
             features = extractor.getFeaturesList()
-
+            st.write("feature ok")
             # Convert features to a DataFrame (expected input format for the model)
             '''feature_names = [
                 'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar', 
