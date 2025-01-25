@@ -32,24 +32,23 @@ if st.button("Check URL"):
             features = extractor.getFeaturesList()
             st.write("feature ok")
             # Convert features to a DataFrame (expected input format for the model)
-            #feature_names = [
-                #'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar', 
-                
-                #'NoOfEqual', 'NoOfQmark', 'NoOfAmp', 'NoOfDigits', 'LineLength', 'HasTitle',
-                #'HasMeta', 'HasFavicon', 'HasExternalFormSubmit', 'HasCopyright', 'HasSocialNetworking',
-               # 'HasPasswordField', 'HasSubmitButton', 'HasKeywordBank', 'HasKeywordPay', 'HasKeywordCrypto',
-              #  'NoOfPopup', 'NoOfiFrame', 'NoOfImage', 'NoOfJS', 'NoOfCSS', 'NoOfURLRedirect',
-             #   'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
-            #]
+            feature_names = [
+                'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar',   
+                'NoOfEqual', 'NoOfQmark', 'NoOfAmp', 'NoOfDigits', 'LineLength', 'HasTitle',
+                'HasMeta', 'HasFavicon', 'HasExternalFormSubmit', 'HasCopyright', 'HasSocialNetworking',
+                'HasPasswordField', 'HasSubmitButton', 'HasKeywordBank', 'HasKeywordPay', 'HasKeywordCrypto',
+                'NoOfPopup', 'NoOfiFrame', 'NoOfImage', 'NoOfJS', 'NoOfCSS', 'NoOfURLRedirect',
+                 'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
+            ]
             #features_df = pd.DataFrame([features])
 
-            obj = np.array(extractor.getFeaturesList()).reshape(1,33) 
-            df = pd.DataFrame(obj)
+            obj = np.array(extractor.getFeaturesList()).reshape(1,len(feature_names)) 
+            df = pd.DataFrame(obj,columns=feature_names)
             st.dataframe(df)
 
             st.write("Label Encoder")
             d = defaultdict(LabelEncoder)
-            dfl = df.apply(lambda col: d[col.name].fit_transform(col))
+            df = df.apply(lambda x: d[x.name].fit_transform(x))
             x = df.to_numpy()
             st.dataframe(dfl)
             
