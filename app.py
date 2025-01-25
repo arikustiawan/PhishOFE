@@ -71,8 +71,8 @@ st.markdown(
             justify-content: center; /* Center items horizontally */
             align-items: center; /* Center items vertically */
             text-align: center; /* Optional: Center-align text inside */
-            argin-top: 300px;
-            height: calc(200vh - 150px);
+            margin-top: 300px;
+         
         }
         .container h2 {
             font-size: 1.25rem;
