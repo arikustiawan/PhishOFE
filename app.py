@@ -67,9 +67,10 @@ st.markdown(
         }
         .container {
             display: flex; /* Activate Flexbox */
-            justify-content: center; /* Horizontal centering */
-            align-items: center; /* Vertical centering */
-            text-align: center; /* Optional: Center-align text */
+            justify-content: center; /* Center items horizontally */
+            align-items: center; /* Center items vertically */
+            text-align: center; /* Optional: Center-align text inside */
+            height: 100vh; /* Full viewport he
         }
         .container h2 {
             font-size: 1.25rem;
