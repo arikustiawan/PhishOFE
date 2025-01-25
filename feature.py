@@ -322,8 +322,12 @@ class FeatureExtraction:
         return interactive_element_density
 
     def getFeaturesList(self):
-        df = pd.DataFrame(self.features)
+        #df = pd.DataFrame(self.features)
         d = defaultdict(LabelEncoder)
-        df = df.apply(lambda x: d[x.name].fit_transform(x))
+        #df = df.apply(lambda x: d[x.name].fit_transform(x))
         #self.features = self.features.apply(lambda x: d[x.name].fit_transform(x))
-        return df
+
+        # Apply LabelEncoder to each column and collect features
+        encoded_data = data.apply(lambda col: d[col.name].fit_transform(col))
+        self.features = encoded_data.values.tolist()
+        return self.features
