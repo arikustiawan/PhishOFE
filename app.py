@@ -18,6 +18,7 @@ except Exception as e:
 st.set_page_config(
     page_title="Predict URL",
     layout="wide",
+    page_icon="🔗",
     initial_sidebar_state="expanded"
 )
 #st.sidebar.title("Predict URL")
