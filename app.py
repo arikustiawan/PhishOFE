@@ -19,7 +19,17 @@ except Exception as e:
 # Set up the Streamlit app with custom page layout
 st.set_page_config(page_title="Phishing URL Detection", layout="wide")
 
-# Page Header with custom styles
+st.markdown(
+    """
+    <style>
+    .resized-text-input input {
+        width: 500px !important; /* Adjust the width here */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.markdown(
     """
     <div style="background-color:#0044cc; padding:10px; border-radius:5px;">
