@@ -60,8 +60,11 @@ if st.button("Check URL"):
             st.write(y_pro_non_phishing)
             
             # Display the result
-            result = "Legitimate" if y_pro_non_phishing <= 0.99 else "Phishing"
-            st.success(f"The URL is classified as: **{result}**")
+            pred = "It is {0:.2f} % safe to go ".format(y_pro_phishing*100)
+            st.success({pred})
+            
+            result = "Legitimate" if y_pro_non_phishing == 1 else "Phishing"
+            #st.success(f"The URL is classified as: **{result}**")
         except Exception as e:
             st.error(f"An error occurred during feature extraction or prediction: {e}")
     else:
