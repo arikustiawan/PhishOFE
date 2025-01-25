@@ -62,11 +62,9 @@ st.markdown(
             text-decoration: underline;
         }
         .container {
-
             display: flex; /* Activate Flexbox */
             justify-content: center; /* Horizontal centering */
             align-items: center; /* Vertical centering */
-            height: 100vh; /* Optional: Set a height, e.g., full viewport height */
             text-align: center; /* Optional: Center-align text */
         }
         .container h2 {
