@@ -2,8 +2,9 @@ import streamlit as st
 import joblib
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import LabelEncoder
+from collections import defaultdict
 from feature import FeatureExtraction
+from sklearn.preprocessing import LabelEncoder
 
 # Load the trained model
 try:
@@ -16,20 +17,16 @@ except Exception as e:
     st.stop()
 
 # Set up the Streamlit app
-st.set_page_config(page_title="Phishing URL Detection", layout="wide")
+st.set_page_config(page_title="Phishing URL Detection", layout="centered")
 st.markdown(
     """
     <style>
     header {
-        background-color: #004b93 !important;
+        background-color: #004b93;
         color: white;
-    }
-    footer {
-        background-color: #004b93 !important;
-        color: white;
-    }
-    h1 {
-        color: #004b93;
+        text-align: center;
+        padding: 10px;
+        font-size: 1.5rem;
     }
     .stTextInput > div > label {
         font-size: 1.5rem;
@@ -38,35 +35,20 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+st.markdown("<header>PHISHING URL DETECTION USING MACHINE LEARNING</header>", unsafe_allow_html=True)
 
-# Custom header for consistency with HTML
-st.markdown(
-    """
-    <header style="display: flex; justify-content: space-between; align-items: center; background-color: #004b93; padding: 10px;">
-        <div style="display: flex; align-items: center;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/77/MMU_Malaysia_logo.png" alt="MMU Logo" style="height: 50px; margin-right: 10px; background-color: white; padding: 5px; border-radius: 5px;">
-            <h1 style="margin: 0; font-size: 1.5rem; color: white;">PHISHING URL DETECTION USING MACHINE LEARNING</h1>
-        </div>
-        <nav style="display: flex; gap: 15px;">
-            <a href="#" style="color: white; text-decoration: none;">Upload Dataset</a>
-            <a href="#" style="color: white; text-decoration: none;">Predict URL</a>
-            <a href="#" style="color: white; text-decoration: none;">Performance Analysis</a>
-        </nav>
-    </header>
-    """,
-    unsafe_allow_html=True,
-)
-
-# Input section
-st.header("Enter URL:")
-url_input = st.text_input("URL", placeholder="Enter the URL for classification")
+# Input Section
+st.write("Enter a URL to classify as Legitimate or Phishing:")
+url_input = st.text_input("URL", placeholder="Enter the URL here")
 
 if st.button("Check URL"):
     if url_input:
         try:
-            # Feature extraction
+            # Extract features using the FeatureExtraction class
             extractor = FeatureExtraction(url_input)
             features = extractor.getFeaturesList()
+            
+            # Convert features to a DataFrame
             feature_names = [
                 'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar', 
                 'NoOfEqual', 'NoOfQmark', 'NoOfAmp', 'NoOfDigits', 'LineLength', 'HasTitle',
@@ -77,30 +59,28 @@ if st.button("Check URL"):
             ]
             feature_array = np.array(features).reshape(1, len(feature_names))
             df = pd.DataFrame(feature_array, columns=feature_names)
-            df['TLD'] = LabelEncoder().fit_transform(df['TLD'])
 
-            # Model prediction
-            prediction = model.predict(df)
-            prediction_proba = model.predict_proba(df)
-            phishing_prob = prediction_proba[0][1] * 100
-            legitimate_prob = prediction_proba[0][0] * 100
+            # Label Encoding
+            tld_encoder = LabelEncoder()
+            df['TLD'] = tld_encoder.fit_transform(df['TLD'])
+            df_encoded = df.copy()
 
-            # Display result
-            if phishing_prob >= 50:
-                st.error(f"URL does not look secure! It might be harmful and unsafe to visit.")
+            # Predict using the model
+            x = df_encoded.to_numpy()
+            y = model.predict(x)
+            y_prob_phishing = model.predict_proba(x)[0, 1]
+            y_prob_non_phishing = model.predict_proba(x)[0, 0]
+
+            # Display the result
+            pred_phishing = y_prob_phishing * 100
+            pred_legitimate = y_prob_non_phishing * 100
+            st.write(f"Phishing Probability: {pred_phishing:.2f}%")
+            st.write(f"Legitimate Probability: {pred_legitimate:.2f}%")
+            result = "Phishing" if pred_phishing >= 50 else "Legitimate"
+            
+            if result == "Phishing":
+                st.error(f"The URL is classified as: **{result}**")
             else:
-                st.success("URL looks secure and safe to visit.")
+                st.success(f"The URL is classified as: **{result}**")
         except Exception as e:
-            st.error(f"An error occurred: {e}")
-    else:
-        st.warning("Please enter a URL.")
-
-# Footer
-st.markdown(
-    """
-    <footer style="background-color: #004b93; color: white; text-align: center; padding: 10px;">
-        <p>Developed by Ari Kustiawan</p>
-    </footer>
-    """,
-    unsafe_allow_html=True,
-)
+            st.error(f"An error occurred during feature extraction or pr
