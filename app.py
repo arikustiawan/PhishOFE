@@ -42,10 +42,16 @@ if st.button("Check URL"):
              #   'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
             #]
             #features_df = pd.DataFrame([features])
+
+            obj = np.array(extractor.getFeaturesList()).reshape(1,33) 
+            df = pd.DataFrame(obj)
             
+            d = defaultdict(LabelEncoder)
+            df = df.apply(lambda x: d[x.name].fit_transform(x))
+
+            test = df.to_numpy()
             # Use the model to predict
-            x = np.array(extractor.getFeaturesList()).reshape(1,33) 
-            prediction = model.predict(x)[0] 
+            prediction = model.predict(test)[0] 
             st.write("predict ok")
             
             # Display the result
