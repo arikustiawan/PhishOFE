@@ -16,18 +16,65 @@ except Exception as e:
     st.stop()
 
 # Set up the Streamlit app
-st.set_page_config(page_title="Phishing URL Detection", layout="centered")
+st.set_page_config(page_title="Phishing URL Detection", layout="wide", page_icon="🌐")
+
+# Custom CSS for full-page design
 st.markdown(
     """
     <style>
-        header {visibility: hidden;}
+        body {
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
         .reportview-container {
-            background: #f5f5f5;
+            padding: 0;
         }
-        .css-18e3th9 {
-            padding-top: 2rem;
+        header {
+            visibility: hidden;
         }
-        .stButton button {
+        .main {
+            padding: 0 !important;
+        }
+        .nav-bar {
+            background-color: #003366;
+            padding: 15px 0;
+            text-align: center;
+        }
+        .nav-bar img {
+            height: 60px;
+        }
+        .nav-bar h1 {
+            display: inline-block;
+            color: white;
+            font-size: 24px;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+        .nav-links {
+            margin-top: 10px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .input-section {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .input-section input {
+            width: 40%;
+            height: 40px;
+            font-size: 18px;
+            padding: 5px;
+        }
+        .input-section button {
             background-color: #0066cc;
             color: white;
             border: none;
@@ -35,40 +82,71 @@ st.markdown(
             font-size: 16px;
             cursor: pointer;
         }
-        .stButton button:hover {
+        .input-section button:hover {
             background-color: #004d99;
         }
-        .stTextInput {
-            margin-bottom: 1rem;
+        .result-section {
+            text-align: center;
+            margin-top: 20px;
         }
-        .message-success {
+        .success {
             color: green;
-            font-size: 18px;
+            font-size: 20px;
+            font-weight: bold;
         }
-        .message-warning {
+        .warning {
             color: red;
-            font-size: 18px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Top navigation bar
+# Navigation Bar
 st.markdown(
     """
-    <div style="background-color:#003366; padding:10px;">
-        <h2 style="color:white; text-align:center; margin: 0;">PHISHING URL DETECTION USING MACHINE LEARNING</h2>
+    <div class="nav-bar">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/MMU_Logo.png" alt="MMU Logo">
+        <h1>PHISHING URL DETECTION USING MACHINE LEARNING</h1>
+        <div class="nav-links">
+            <a href="#upload-dataset">Upload Dataset</a>
+            <a href="#predict-url">Predict URL</a>
+            <a href="#performance-analysis">Performance Analysis</a>
+        </div>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
 # Input Section
-st.markdown("<h3 style='text-align:center;'>ENTER URL:</h3>", unsafe_allow_html=True)
-url_input = st.text_input("", placeholder="https://example.com", key="url_input", label_visibility="collapsed")
+st.markdown(
+    """
+    <div class="input-section">
+        <h2>ENTER URL:</h2>
+        <form action="" method="get">
+            <input type="text" placeholder="https://example.com" id="url-input" name="url-input">
+            <button type="submit">CHECK</button>
+        </form>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
-if st.button("CHECK", key="check_url", help="Check if the URL is safe or phishing"):
+url_input = st.text_input("", placeholder="Enter a URL here", label_visibility="collapsed")
+
+# Check URL Section
+if st.button("CHECK"):
     if url_input:
         try:
             # Extract features using the FeatureExtraction class
@@ -94,17 +172,16 @@ if st.button("CHECK", key="check_url", help="Check if the URL is safe or phishin
 
             # Predict using the model
             y_prob_phishing = model.predict_proba(x)[0, 1]
-            y_prob_legitimate = model.predict_proba(x)[0, 0]
 
             # Display the result
             if y_prob_phishing >= 0.99:
                 st.markdown(
-                    f"<p class='message-warning'>URL does not look secure! It might be harmful and unsafe to visit.</p>",
+                    "<div class='result-section warning'>URL does not look secure! It might be harmful and unsafe to visit.</div>",
                     unsafe_allow_html=True,
                 )
             else:
                 st.markdown(
-                    f"<p class='message-success'>URL looks secure and safe to visit.</p>",
+                    "<div class='result-section success'>URL looks secure and safe to visit.</div>",
                     unsafe_allow_html=True,
                 )
         except Exception as e:
@@ -115,7 +192,7 @@ if st.button("CHECK", key="check_url", help="Check if the URL is safe or phishin
 # Footer
 st.markdown(
     """
-    <footer style="background-color:#003366; padding:10px; text-align:center; color:white;">
+    <footer>
         <p>Developed by Ari Kustiawan</p>
     </footer>
     """,
