@@ -45,6 +45,7 @@ if st.button("Check URL"):
 
             obj = np.array(extractor.getFeaturesList()).reshape(1,33) 
             df = pd.DataFrame(obj)
+            st.write({df})
             
             d = defaultdict(LabelEncoder)
             df = df.apply(lambda x: d[x.name].fit_transform(x))
