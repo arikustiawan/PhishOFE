@@ -40,7 +40,7 @@ if st.button("Check URL"):
             features_df = pd.DataFrame([features])
             
             # Use the model to predict
-            prediction = model.predict(features_df.iloc[:, 1:])[0]  # Skip the URL itself
+            prediction = model.predict(features_df)[0] 
             
             # Display the result
             result = "Legitimate" if prediction == 0 else "Phishing"
