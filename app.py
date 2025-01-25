@@ -42,8 +42,9 @@ if st.button("Check URL"):
             #features_df = pd.DataFrame([features])
             
             # Use the model to predict
-            prediction = model.predict(features)[0] 
-            st.write("feature ok")
+            x = np.array(obj.getFeaturesList()).reshape(1,33) 
+            prediction = model.predict(x)[0] 
+            st.write("predict ok")
             
             # Display the result
             result = "Legitimate" if prediction == 0 else "Phishing"
