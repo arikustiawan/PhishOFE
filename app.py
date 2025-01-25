@@ -37,7 +37,7 @@ st.markdown(
             justify-content: space-between;
             align-items: center;
             position: fixed; /* Fix the header at the top */
-            top: 0; /* Stick it to the top */
+            top: 100; /* Stick it to the top */
             left: 0; /* Align it with the left edge */
             z-index: 1000; /* Ensure it stays above other content */
         }
