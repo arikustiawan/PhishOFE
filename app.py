@@ -36,7 +36,10 @@ st.markdown(
             display: flex;
             justify-content: space-between;
             align-items: center;
-            
+            position: fixed; /* Fix the header at the top */
+            top: 0; /* Stick it to the top */
+            left: 0; /* Align it with the left edge */
+            z-index: 1000; /* Ensure it stays above other content */
         }
         header .logo {
             display: flex;
@@ -100,9 +103,9 @@ st.markdown(
             color: white;
             text-align: center;
             padding: 10px 0;
-            position: fixed; /* Fix the footer position */
-            bottom: 0; /* Stick it to the bottom */
-            left: 0; /* Ensure it spans the entire width */
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
             z-index: 1000; 
         }
     </style>
