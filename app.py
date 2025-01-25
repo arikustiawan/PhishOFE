@@ -30,7 +30,7 @@ if st.button("Check URL"):
             features = extractor.getFeaturesList()
 
             # Convert features to a DataFrame (expected input format for the model)
-            feature_names = [
+            '''feature_names = [
                 'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar', 
                 'NoOfEqual', 'NoOfQmark', 'NoOfAmp', 'NoOfDigits', 'LineLength', 'HasTitle',
                 'HasMeta', 'HasFavicon', 'HasExternalFormSubmit', 'HasCopyright', 'HasSocialNetworking',
@@ -38,7 +38,7 @@ if st.button("Check URL"):
                 'NoOfPopup', 'NoOfiFrame', 'NoOfImage', 'NoOfJS', 'NoOfCSS', 'NoOfURLRedirect',
                 'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
             ]
-            features_df = pd.DataFrame([features])
+            features_df = pd.DataFrame([features])'''
             
             # Use the model to predict
             prediction = model.predict(features)[0] 
