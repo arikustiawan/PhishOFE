@@ -47,7 +47,7 @@ if st.button("Check URL"):
             df = pd.DataFrame(obj)
             st.dataframe(df)
 
-            st.write("predict ok")
+            st.write("Label Encoder")
             d = defaultdict(LabelEncoder)
             df = df.apply(lambda x: d[x.name].fit_transform(x))
             x = df.to_numpy()
