@@ -93,7 +93,7 @@ st.markdown(
     """
     <header>
         <div class="logo">
-            <h1>PHISHING URL DETECTION USING MACHINE LEARNING</h1>
+            <h3>PHISHING URL DETECTION USING MACHINE LEARNING</h3>
         </div>
         <nav class="menu">
             <a href="#">Upload Dataset</a>
