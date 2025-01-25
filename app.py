@@ -2,9 +2,9 @@ import streamlit as st
 import joblib
 import pandas as pd
 import numpy as np
-from collections import defaultdict
 from feature import FeatureExtraction
 from sklearn.preprocessing import LabelEncoder
+
 # Load the trained model
 try:
     model = joblib.load("model.pkl")
@@ -17,61 +17,96 @@ except Exception as e:
 
 # Set up the Streamlit app
 st.set_page_config(page_title="Phishing URL Detection", layout="centered")
-st.title("Phishing URL Detection Using Machine Learning")
+st.markdown(
+    """
+    <style>
+        header {visibility: hidden;}
+        .reportview-container {
+            background: #f5f5f5;
+        }
+        .css-18e3th9 {
+            padding-top: 2rem;
+        }
+        .stButton button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .stButton button:hover {
+            background-color: #004d99;
+        }
+        .stTextInput {
+            margin-bottom: 1rem;
+        }
+        .message-success {
+            color: green;
+            font-size: 18px;
+        }
+        .message-warning {
+            color: red;
+            font-size: 18px;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Top navigation bar
+st.markdown(
+    """
+    <div style="background-color:#003366; padding:10px;">
+        <h2 style="color:white; text-align:center; margin: 0;">PHISHING URL DETECTION USING MACHINE LEARNING</h2>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # Input Section
-st.write("Enter a URL to classify as Legitimate or Phishing:")
-url_input = st.text_input("URL")
+st.markdown("<h3 style='text-align:center;'>ENTER URL:</h3>", unsafe_allow_html=True)
+url_input = st.text_input("", placeholder="https://example.com", key="url_input", label_visibility="collapsed")
 
-if st.button("Check URL"):
+if st.button("CHECK", key="check_url", help="Check if the URL is safe or phishing"):
     if url_input:
         try:
             # Extract features using the FeatureExtraction class
             extractor = FeatureExtraction(url_input)
-            st.write("extractor ok")
             features = extractor.getFeaturesList()
-            st.write("feature ok")
-            # Convert features to a DataFrame (expected input format for the model)
+
+            # Convert features to a DataFrame
             feature_names = [
-                'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar',   
+                'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar',
                 'NoOfEqual', 'NoOfQmark', 'NoOfAmp', 'NoOfDigits', 'LineLength', 'HasTitle',
                 'HasMeta', 'HasFavicon', 'HasExternalFormSubmit', 'HasCopyright', 'HasSocialNetworking',
                 'HasPasswordField', 'HasSubmitButton', 'HasKeywordBank', 'HasKeywordPay', 'HasKeywordCrypto',
                 'NoOfPopup', 'NoOfiFrame', 'NoOfImage', 'NoOfJS', 'NoOfCSS', 'NoOfURLRedirect',
-                 'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
+                'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
             ]
-            #features_df = pd.DataFrame([features])
-
-            obj = np.array(extractor.getFeaturesList()).reshape(1,len(feature_names)) 
-            df = pd.DataFrame(obj,columns=feature_names)
-            st.dataframe(df)
-
-            st.write("Label Encoder")
-            tld_encoder = LabelEncoder()
+            obj = np.array(features).reshape(1, len(feature_names))
+            df = pd.DataFrame(obj, columns=feature_names)
 
             # Encode the TLD column
+            tld_encoder = LabelEncoder()
             df['TLD'] = tld_encoder.fit_transform(df['TLD'])
-            df_encoded = df.copy()
+            x = df.to_numpy()
 
-            x = df_encoded.to_numpy()
-            st.dataframe(df_encoded)
-            
-            # Use the model to predict
-            y = model.predict(x)
-            #st.write("predict: ",y)
+            # Predict using the model
+            y_prob_phishing = model.predict_proba(x)[0, 1]
+            y_prob_legitimate = model.predict_proba(x)[0, 0]
 
-            y_prob_phishing = model.predict_proba(x)[0,1]
-            y_prob_non_phishing = model.predict_proba(x)[0,0]
-            #st.write(y_pro_phishing)
-            #st.write(y_pro_non_phishing)
-            
             # Display the result
-            pred = y_pro_phishing*100
-            pred2 = y_pro_non_phishing*100
-            st.success({pred})
-            st.success({pred2})
-            result = "Phishing" if pred >= 99 else "Legitimate"
-            st.success(f"The URL is classified as: **{result}**")
+            if y_prob_phishing >= 0.99:
+                st.markdown(
+                    f"<p class='message-warning'>URL does not look secure! It might be harmful and unsafe to visit.</p>",
+                    unsafe_allow_html=True,
+                )
+            else:
+                st.markdown(
+                    f"<p class='message-success'>URL looks secure and safe to visit.</p>",
+                    unsafe_allow_html=True,
+                )
         except Exception as e:
             st.error(f"An error occurred during feature extraction or prediction: {e}")
     else:
@@ -80,11 +115,8 @@ if st.button("Check URL"):
 # Footer
 st.markdown(
     """
-    <style>
-    footer {visibility: hidden;}
-    </style>
-    <footer>
-    <p>Developed by Ari Kustiawan</p>
+    <footer style="background-color:#003366; padding:10px; text-align:center; color:white;">
+        <p>Developed by Ari Kustiawan</p>
     </footer>
     """,
     unsafe_allow_html=True,
