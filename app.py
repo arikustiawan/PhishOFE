@@ -172,14 +172,14 @@ if st.button("CHECK"):
 
             # Prediction
             y_prob_phishing = model.predict_proba(x)[0, 1]
-
+            pred = y_prob_phishing*100
             # Display result
             #if y_prob_phishing >= 0.99:
              #   st.warning("URL does not look secure! It might be harmful and unsafe to visit.")
             #else:
             #    st.success("URL looks secure and safe to visit.")
 
-            if y_prob_phishing >= 0.99:
+            if pred >= 99:
                 st.markdown(
                     "<p style='color: red; font-size: 18px; font-weight: bold;'>URL does not look secure! It might be harmful and unsafe to visit.</p>",
                     unsafe_allow_html=True
