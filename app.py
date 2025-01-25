@@ -15,69 +15,140 @@ except Exception as e:
     st.error(f"Error loading the model: {e}")
     st.stop()
 
-# Set up the Streamlit app
-st.set_page_config(page_title="Phishing URL Detection", layout="centered")
+# Set up Streamlit page configuration
+st.set_page_config(page_title="Phishing URL Detection", layout="wide")
 
-# Custom CSS for styling
+# Custom CSS to match the design
 st.markdown(
     """
     <style>
-    .header {
-        background-color: #002F6C;
-        color: white;
-        padding: 10px;
-        text-align: center;
-    }
-    .footer {
-        background-color: #002F6C;
-        color: white;
-        padding: 10px;
-        text-align: center;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-    }
-    .input-section {
-        margin: 20px auto;
-        text-align: center;
-    }
-    .output-section {
-        margin: 20px auto;
-        text-align: center;
-        font-weight: bold;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e6e6e6;
+        }
+        header {
+            width: 100%;
+            background-color: #004b93;
+            padding: 10px 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header .logo {
+            display: flex;
+            align-items: center;
+        }
+        header .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+        header h1 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            width: 60%;
+            margin: auto;
+            margin-top: 15vh;
+            background-color: #f0f4f5;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            font-size: 1.25rem;
+            color: #004b93;
+            margin-bottom: 20px;
+        }
+        .container input {
+            width: 80%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .container button {
+            background-color: #004b93;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .container button:hover {
+            background-color: #003766;
+        }
+        footer {
+            width: 100%;
+            background-color: #004b93;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+        }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Header
-st.markdown('<div class="header"><h2>PHISHING URL DETECTION USING MACHINE LEARNING</h2></div>', unsafe_allow_html=True)
-
-# Navigation menu
+# Navigation bar
 st.markdown(
     """
-    <div style="display: flex; justify-content: space-around; padding: 10px; background-color: #002F6C; color: white;">
-        <a href="#" style="color: white; text-decoration: none;">Upload Dataset</a>
-        <a href="#" style="color: white; text-decoration: none;">Predict URL</a>
-        <a href="#" style="color: white; text-decoration: none;">Performance Analysis</a>
+    <header>
+        <div class="logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/MMU_Logo.png" alt="MMU Logo">
+            <h1>PHISHING URL DETECTION USING MACHINE LEARNING</h1>
+        </div>
+        <nav>
+            <a href="#">Upload Dataset</a>
+            <a href="#">Predict URL</a>
+            <a href="#">Performance Analysis</a>
+        </nav>
+    </header>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Main container for URL input and results
+st.markdown(
+    """
+    <div class="container">
+        <h2>ENTER URL:</h2>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
-# Input Section
-st.markdown('<div class="input-section"><h3>Enter URL:</h3></div>', unsafe_allow_html=True)
-url_input = st.text_input("", placeholder="Enter URL here", key="url_input")
+url_input = st.text_input("", placeholder="Enter URL here", label_visibility="collapsed")
 
-if st.button("Check URL"):
+# URL checking button
+if st.button("CHECK"):
     if url_input:
         try:
-            # Extract features using the FeatureExtraction class
+            # Feature extraction
             extractor = FeatureExtraction(url_input)
             features = extractor.getFeaturesList()
 
-            # Convert features to a DataFrame (expected input format for the model)
+            # Create DataFrame
             feature_names = [
                 'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar',
                 'NoOfEqual', 'NoOfQmark', 'NoOfAmp', 'NoOfDigits', 'LineLength', 'HasTitle',
@@ -86,36 +157,33 @@ if st.button("Check URL"):
                 'NoOfPopup', 'NoOfiFrame', 'NoOfImage', 'NoOfJS', 'NoOfCSS', 'NoOfURLRedirect',
                 'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
             ]
-
             obj = np.array(features).reshape(1, len(feature_names))
             df = pd.DataFrame(obj, columns=feature_names)
 
-            # Encode the TLD column
+            # Encode TLD column
             tld_encoder = LabelEncoder()
             df['TLD'] = tld_encoder.fit_transform(df['TLD'])
-
-            # Use the model to predict
             x = df.to_numpy()
-            y = model.predict(x)
 
+            # Prediction
             y_prob_phishing = model.predict_proba(x)[0, 1]
 
-            # Display the result
+            # Display result
             if y_prob_phishing >= 0.99:
-                st.markdown(
-                    '<div class="output-section" style="color: red;">URL does not look secure! It might be harmful and unsafe to visit.</div>',
-                    unsafe_allow_html=True,
-                )
+                st.warning("URL does not look secure! It might be harmful and unsafe to visit.")
             else:
-                st.markdown(
-                    '<div class="output-section" style="color: green;">URL looks secure and safe to visit.</div>',
-                    unsafe_allow_html=True,
-                )
-
+                st.success("URL looks secure and safe to visit.")
         except Exception as e:
-            st.error(f"An error occurred during feature extraction or prediction: {e}")
+            st.error(f"An error occurred during prediction: {e}")
     else:
         st.warning("Please enter a URL.")
 
 # Footer
-st.markdown('<div class="footer">Developed by Ari Kustiawan</div>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <footer>
+        <p>Developed by Ari Kustiawan</p>
+    </footer>
+    """,
+    unsafe_allow_html=True,
+)
