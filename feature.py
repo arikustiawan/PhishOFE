@@ -336,9 +336,11 @@ class FeatureExtraction:
 
     def getLabelEncoder(self):
         #df = pd.DataFrame(self.features)
+        obj = np.array(getFeaturesList()).reshape(1,33) 
+        df = pd.DataFrame(obj)
         d = defaultdict(LabelEncoder)
         #df = df.apply(lambda x: d[x.name].fit_transform(x))
-        encoded_df = data.apply(lambda col: d[col.name].fit_transform(col))
+        encoded_df = df.apply(lambda col: d[col.name].fit_transform(col))
         #data = pd.DataFrame(self.features)
         # Apply LabelEncoder to each column and collect features
         #encoded_data = data.apply(lambda col: d[col.name].fit_transform(col))
