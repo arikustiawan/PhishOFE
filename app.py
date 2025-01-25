@@ -61,7 +61,14 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-url_input = st.text_input("", placeholder="Enter URL here", label_visibility="collapsed")
+url_input = st.text_input(
+    "",
+    placeholder="Enter URL here",
+    label_visibility="collapsed",
+    key="url_input",
+    help="This is a custom input box"
+)
+
 st.markdown('<div class="resized-text-input">{}</div>'.format(url_input), unsafe_allow_html=True)
 
 if st.button("CHECK", type="primary"):
