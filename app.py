@@ -51,6 +51,31 @@ st.markdown(
             text-align: center;
             margin-top: 100px;
         }
+        .input-container {
+            display: inline-block;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .input-box {
+            width: 300px;
+            height: 40px;
+            font-size: 16px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .check-button {
+            background-color: #003399;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .check-button:hover {
+            background-color: #002266;
+        }
         .footer {
             background-color: #003399;
             padding: 10px;
@@ -60,30 +85,6 @@ st.markdown(
             position: fixed;
             bottom: 0;
             width: 100%;
-        }
-        .input-box {
-            width: 30%;
-            margin: 20px auto;
-            text-align: center;
-        }
-        .input-box input {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-        }
-        .button-container {
-            margin-top: 20px;
-        }
-        .button-container button {
-            background-color: #003399;
-            color: white;
-            font-size: 16px;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-        }
-        .button-container button:hover {
-            background-color: #002266;
         }
     </style>
     """,
@@ -95,7 +96,7 @@ st.markdown(
     """
     <div class="header">
         <div>
-            <img src="logo.jpg" alt="MMU Logo">
+            <img src="https://upload.wikimedia.org/wikipedia/en/1/14/MMU_Logo.png" alt="MMU Logo">
         </div>
         <div style="flex-grow: 1; text-align: center; font-weight: bold;">
             PHISHING URL DETECTION USING MACHINE LEARNING
@@ -115,14 +116,19 @@ st.markdown(
     """
     <div class="main-content">
         <h3>ENTER URL:</h3>
+        <div class="input-container">
+            <input class="input-box" type="text" placeholder="Type your URL here..." id="url-input">
+        </div>
+        <div class="button-container">
+            <button class="check-button" id="check-button">Check URL</button>
+        </div>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
-url_input = st.text_input("", placeholder="Type your URL here...")
-
 # Prediction logic
+url_input = st.text_input("Hidden field", "", key="url_input")
 if st.button("Check URL"):
     if url_input:
         try:
