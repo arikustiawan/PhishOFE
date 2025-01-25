@@ -23,7 +23,7 @@ st.markdown(
     """
     <style>
     .resized-text-input input {
-        width: 500px !important; /* Adjust the width here */
+        width: 100px !important; /* Adjust the width here */
     }
     </style>
     """,
