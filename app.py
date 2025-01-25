@@ -30,15 +30,12 @@ if st.button("Check URL"):
 
             # Convert features to a DataFrame (expected input format for the model)
             feature_names = [
-                "isHttps", "isDomainIp", "tld", "URLlength", "NoOfSubdomain",
-                "NoOfDots", "NoOfObfuscatedChar", "NoOfEqual", "NoOfQmark", "NoOfAmp", 
-                "NoOfDigits", "LineLength", "hasTitle", "hasMeta", "hasFavicon", 
-                "hasExternalFormSubmit", "hasCopyright", "hasSocialNetworking", 
-                "hasPasswordField", "hasSubmitButton", "hasKeywordBank", 
-                "hasKeywordPay", "hasKeywordCrypto", "NoOfPopup", "NoOfiframe", 
-                "NoOfImage", "NoOfJS", "NoOfCSS", "NoOfURLRedirect", 
-                "NoOfHyperlink", "SuspiciousCharRatio", "URLComplexityScore", 
-                "HTMLContentDensity", "InteractiveElementDensity"
+                'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar', 
+                'NoOfEqual', 'NoOfQmark', 'NoOfAmp', 'NoOfDigits', 'LineLength', 'HasTitle',
+                'HasMeta', 'HasFavicon', 'HasExternalFormSubmit', 'HasCopyright', 'HasSocialNetworking',
+                'HasPasswordField', 'HasSubmitButton', 'HasKeywordBank', 'HasKeywordPay', 'HasKeywordCrypto',
+                'NoOfPopup', 'NoOfiFrame', 'NoOfImage', 'NoOfJS', 'NoOfCSS', 'NoOfURLRedirect',
+                'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
             ]
             features_df = pd.DataFrame([features], columns=feature_names)
             
