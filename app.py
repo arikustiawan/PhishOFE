@@ -100,9 +100,10 @@ st.markdown(
             color: white;
             text-align: center;
             padding: 10px 0;
-            possition: bottom;
-            bottom: 0;
-       
+            position: fixed; /* Fix the footer position */
+            bottom: 0; /* Stick it to the bottom */
+            left: 0; /* Ensure it spans the entire width */
+            z-index: 1000; 
         }
     </style>
     """,
