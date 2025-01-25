@@ -69,8 +69,6 @@ url_input = st.text_input(
     help="This is a custom input box"
 )
 
-st.markdown('<div class="resized-text-input">{}</div>'.format(url_input), unsafe_allow_html=True)
-
 if st.button("CHECK", type="primary"):
     if url_input:
         try:
