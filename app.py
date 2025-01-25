@@ -5,7 +5,6 @@ import numpy as np
 from collections import defaultdict
 from feature import FeatureExtraction
 from sklearn.preprocessing import LabelEncoder
-
 # Load the trained model
 try:
     model = joblib.load("model.pkl")
@@ -18,70 +17,61 @@ except Exception as e:
 
 # Set up the Streamlit app
 st.set_page_config(page_title="Phishing URL Detection", layout="centered")
-st.markdown(
-    """
-    <style>
-    header {
-        background-color: #004b93;
-        color: white;
-        text-align: center;
-        padding: 10px;
-        font-size: 1.5rem;
-    }
-    .stTextInput > div > label {
-        font-size: 1.5rem;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-st.markdown("<header>PHISHING URL DETECTION USING MACHINE LEARNING</header>", unsafe_allow_html=True)
+st.title("Phishing URL Detection Using Machine Learning")
 
 # Input Section
 st.write("Enter a URL to classify as Legitimate or Phishing:")
-url_input = st.text_input("URL", placeholder="Enter the URL here")
+url_input = st.text_input("URL")
 
 if st.button("Check URL"):
     if url_input:
         try:
             # Extract features using the FeatureExtraction class
             extractor = FeatureExtraction(url_input)
+            st.write("extractor ok")
             features = extractor.getFeaturesList()
-            
-            # Convert features to a DataFrame
+            st.write("feature ok")
+            # Convert features to a DataFrame (expected input format for the model)
             feature_names = [
-                'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar', 
+                'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar',   
                 'NoOfEqual', 'NoOfQmark', 'NoOfAmp', 'NoOfDigits', 'LineLength', 'HasTitle',
                 'HasMeta', 'HasFavicon', 'HasExternalFormSubmit', 'HasCopyright', 'HasSocialNetworking',
                 'HasPasswordField', 'HasSubmitButton', 'HasKeywordBank', 'HasKeywordPay', 'HasKeywordCrypto',
                 'NoOfPopup', 'NoOfiFrame', 'NoOfImage', 'NoOfJS', 'NoOfCSS', 'NoOfURLRedirect',
-                'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
+                 'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
             ]
-            feature_array = np.array(features).reshape(1, len(feature_names))
-            df = pd.DataFrame(feature_array, columns=feature_names)
+            #features_df = pd.DataFrame([features])
 
-            # Label Encoding
+            obj = np.array(extractor.getFeaturesList()).reshape(1,len(feature_names)) 
+            df = pd.DataFrame(obj,columns=feature_names)
+            st.dataframe(df)
+
+            st.write("Label Encoder")
             tld_encoder = LabelEncoder()
+
+            # Encode the TLD column
             df['TLD'] = tld_encoder.fit_transform(df['TLD'])
             df_encoded = df.copy()
 
-            # Predict using the model
             x = df_encoded.to_numpy()
-            y = model.predict(x)
-            y_prob_phishing = model.predict_proba(x)[0, 1]
-            y_prob_non_phishing = model.predict_proba(x)[0, 0]
-
-            # Display the result
-            pred_phishing = y_prob_phishing * 100
-            pred_legitimate = y_prob_non_phishing * 100
-            st.write(f"Phishing Probability: {pred_phishing:.2f}%")
-            st.write(f"Legitimate Probability: {pred_legitimate:.2f}%")
-            result = "Phishing" if pred_phishing >= 50 else "Legitimate"
+            st.dataframe(df_encoded)
             
-            if result == "Phishing":
-                st.error(f"The URL is classified as: **{result}**")
-            else:
-                st.success(f"The URL is classified as: **{result}**")
+            # Use the model to predict
+            y = model.predict(x)
+            #st.write("predict: ",y)
+
+            y_prob_phishing = model.predict_proba(x)[0,1]
+            y_prob_non_phishing = model.predict_proba(x)[0,0]
+            #st.write(y_pro_phishing)
+            #st.write(y_pro_non_phishing)
+            
+            # Display the result
+            pred = y_pro_phishing*100
+            pred2 = y_pro_non_phishing*100
+            st.success({pred})
+            st.success({pred2})
+            result = "Phishing" if pred >= 99 else "Legitimate"
+            st.success(f"The URL is classified as: **{result}**")
         except Exception as e:
             st.error(f"An error occurred during feature extraction or prediction: {e}")
     else:
