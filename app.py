@@ -180,7 +180,7 @@ if st.button("CHECK"):
             #else:
             #    st.success("URL looks secure and safe to visit.")
 
-            if pred >= 99:
+            if pred >= 99.90:
                 st.markdown(
                     "<p style='color: red; font-size: 18px; font-weight: bold;'>URL does not look secure! It might be harmful and unsafe to visit.</p>",
                     unsafe_allow_html=True
