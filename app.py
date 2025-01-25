@@ -47,14 +47,6 @@ if st.button("Check URL"):
             st.dataframe(df)
 
             st.write("Label Encoder")
-            #d = defaultdict(LabelEncoder)
-            #df_encoded = df.apply(lambda x: d[x.name].fit_transform(x))
-            #label_encoder = LabelEncoder()
-            #df_encoded = label_encoder.fit_transform(df['TLD'])
-            #df_encoded = df.apply(lambda x: d[x.name].fit_transform(x) if x.dtype == 'object' else x)
-            #df_encoded =  extractor.getLabelEncoder(df)
-            #df_encoded = extractor.getLabelEncoder()
-            #categorical_columns = df.select_dtypes(include=['object']).columns  # Identify categorical columns
             tld_encoder = LabelEncoder()
 
             # Encode the TLD column
@@ -66,12 +58,12 @@ if st.button("Check URL"):
             
             # Use the model to predict
             y = model.predict(x)
-            st.write("predict: ",y)
+            #st.write("predict: ",y)
 
-            y_pro_phishing = model.predict_proba(x)[0,1]
-            y_pro_non_phishing = model.predict_proba(x)[0,0]
-            st.write(y_pro_phishing)
-            st.write(y_pro_non_phishing)
+            y_prob_phishing = model.predict_proba(x)[0,1]
+            y_prob_non_phishing = model.predict_proba(x)[0,0]
+            #st.write(y_pro_phishing)
+            #st.write(y_pro_non_phishing)
             
             # Display the result
             pred = y_pro_phishing*100
