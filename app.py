@@ -70,7 +70,7 @@ st.markdown(
             justify-content: center; /* Center items horizontally */
             align-items: center; /* Center items vertically */
             text-align: center; /* Optional: Center-align text inside */
-            argin-top: 60px;
+            argin-top: 200px;
         }
         .container h2 {
             font-size: 1.25rem;
