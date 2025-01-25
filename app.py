@@ -1,215 +1,137 @@
 import streamlit as st
-import joblib
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import LabelEncoder
-from feature import FeatureExtraction
 
-# Load the trained model
-try:
-    model = joblib.load("model.pkl")
-except FileNotFoundError:
-    st.error("Model file not found. Please ensure 'model.pkl' is in the same directory.")
-    st.stop()
-except Exception as e:
-    st.error(f"Error loading the model: {e}")
-    st.stop()
-
-# Set up the Streamlit app
+# Page configuration
 st.set_page_config(page_title="Phishing URL Detection", layout="centered")
 
-# Custom CSS styling to make the header and footer full width, center the content
+# Custom CSS for styling
 st.markdown(
     """
-   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phishing URL Detection</title>
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-        }
-        
-        header {
-            width: 100%;
-            background-color: #004b93;
+        /* Header styling */
+        .header {
+            background-color: #003399;
+            padding: 20px;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
-            box-sizing: border-box;
-            position: absolute;
-            top: 0;
-            left: 0;
+            text-align: left;
+            font-size: 22px;
+            font-weight: bold;
         }
-        
-        header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-        
-        header .logo {
-            display: flex;
-            align-items: center;
-            
-        }
-        header .logo img {
-            height: 40px;
+        /* MMU logo */
+        .logo {
+            display: inline-block;
+            vertical-align: middle;
             margin-right: 10px;
-            background-color: white;
-            padding: 5px;
-            border-radius: 5px;
         }
-        header .menu {
-            display: flex;
-            gap: 15px;
+        /* Navigation bar styling */
+        .nav-bar {
+            background-color: #003399;
+            text-align: right;
+            padding: 10px;
+            margin-top: -10px;
         }
-        
-        header .menu a {
+        .nav-bar a {
             color: white;
             text-decoration: none;
-            font-size: 1rem;
+            font-weight: bold;
+            margin: 0 15px;
         }
-        
-        .container {
+        .nav-bar a:hover {
+            text-decoration: underline;
+        }
+        /* Main content area styling */
+        .main-content {
             text-align: center;
-            background-color: #dde5e8;
-            width: 60%;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin: auto;
-            margin-top: calc(50vh - 150px);
+            margin-top: 50px;
         }
-        
-        .container h2 {
-            font-size: 1.25rem;
-            color: #004b93;
+        .main-content h3 {
+            font-size: 20px;
         }
-        
-        .container input {
-            width: 80%;
+        .main-content input {
+            width: 50%;
             padding: 10px;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
             margin-top: 20px;
-            margin-bottom: 20px;
         }
-        
-        .container button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            background-color: #004b93;
+        .main-content button {
+            background-color: #003399;
             color: white;
+            padding: 10px 20px;
             border: none;
+            font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
         }
-        
-        .container button:hover {
-            background-color: #003766;
+        .main-content button:hover {
+            background-color: #0056b3;
         }
-        
-        footer {
-            width: 100%;
-            background-color: #004b93;
+        /* Footer styling */
+        .footer {
+            background-color: #003399;
             color: white;
             text-align: center;
-            padding: 10px 0;
-            position: absolute;
+            padding: 10px;
+            position: fixed;
             bottom: 0;
-            left: 0;
+            width: 100%;
+            font-size: 12px;
         }
-        
-        footer p {
-            margin: 0;
-        }
-
     </style>
-</head>
     """,
     unsafe_allow_html=True,
 )
 
-# Header section
+# Header with logo and title
 st.markdown(
     """
-    <body>
-    <header>
-        <div class="logo">
-            <img src="logo.jpg" alt="MMU Logo">
-            <h1>PHISHING URL DETECTION USING MACHINE LEARNING</h1>
-        </div>
-        <nav class="menu">
-            <a href="#">Upload Dataset</a>
-            <a href="#">Predict URL</a>
-            <a href="#">Performance Analysis</a>
-        </nav>
-    </header>
+    <div class="header">
+        <img src="https://upload.wikimedia.org/wikipedia/en/4/42/Multimedia_University_logo.png" alt="MMU Logo" class="logo" width="50" />
+        PHISHING URL DETECTION USING MACHINE LEARNING
+    </div>
     """,
     unsafe_allow_html=True,
 )
 
-# Input Section
+# Navigation Bar
+st.markdown(
+    """
+    <div class="nav-bar">
+        <a href="#">Upload Dataset</a>
+        <a href="#">Predict URL</a>
+        <a href="#">Performance Analysis</a>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
-url_input = st.text_input("Enter URL", key="url_input")
-
-if st.button("Check URL"):
-    if url_input:
-        try:
-            # Extract features using the FeatureExtraction class
-            extractor = FeatureExtraction(url_input)
-            features = extractor.getFeaturesList()
-
-            # Convert features to a DataFrame (expected input format for the model)
-            feature_names = [
-                'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar',
-                'NoOfEqual', 'NoOfQmark', 'NoOfAmp', 'NoOfDigits', 'LineLength', 'HasTitle',
-                'HasMeta', 'HasFavicon', 'HasExternalFormSubmit', 'HasCopyright', 'HasSocialNetworking',
-                'HasPasswordField', 'HasSubmitButton', 'HasKeywordBank', 'HasKeywordPay', 'HasKeywordCrypto',
-                'NoOfPopup', 'NoOfiFrame', 'NoOfImage', 'NoOfJS', 'NoOfCSS', 'NoOfURLRedirect',
-                'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
-            ]
-
-            obj = np.array(features).reshape(1, len(feature_names))
-            df = pd.DataFrame(obj, columns=feature_names)
-
-            # Encode the TLD column
-            tld_encoder = LabelEncoder()
-            df['TLD'] = tld_encoder.fit_transform(df['TLD'])
-
-            # Use the model to predict
-            y_prob = model.predict_proba(df.to_numpy())[0]
-
-            # Display the result
-            phishing_prob = y_prob[1] * 100
-            legitimate_prob = y_prob[0] * 100
-            st.markdown(f"<div id='result-message'><strong>Phishing Probability:</strong> {phishing_prob:.2f}%</div>", unsafe_allow_html=True)
-            st.markdown(f"<div id='result-message'><strong>Legitimate Probability:</strong> {legitimate_prob:.2f}%</div>", unsafe_allow_html=True)
-
-            result = "Phishing" if phishing_prob >= 99 else "Legitimate"
-            st.success(f"The URL is classified as: **{result}**")
-
-        except Exception as e:
-            st.error(f"An error occurred: {e}")
-    else:
-        st.warning("Please enter a URL.")
+# Main Content Area
+st.markdown(
+    """
+    <div class="main-content">
+        <h3>ENTER URL:</h3>
+        <form>
+            <input type="text" placeholder="Type your URL here..." id="url_input" />
+            <br><br>
+            <button type="button" onclick="checkURL()">CHECK</button>
+        </form>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # Footer
 st.markdown(
     """
-    <footer>
-        <p>Developed by Ari Kustiawan</p>
-    </footer>
-    </body>
+    <div class="footer">
+        Developed by Ari Kustiawan
+    </div>
     """,
     unsafe_allow_html=True,
 )
+
+# Add interactivity with Streamlit
+url_input = st.text_input("Enter URL", key="input_key", label_visibility="hidden")
+
+if st.button("CHECK", key="check_button"):
+    if url_input:
+        st.success(f"Checking URL: {url_input}")
+    else:
+        st.error("Please enter a URL!")
