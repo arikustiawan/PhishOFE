@@ -66,7 +66,7 @@ if st.button("Check URL"):
             
             # Use the model to predict
             y = model.predict(x)[0] 
-            st.write("predict ok")
+            st.write("predict: "y)
 
             y_pro_phishing = model.predict_proba(x)[0,0]
             y_pro_non_phishing = model.predict_proba(x)[0,1]
