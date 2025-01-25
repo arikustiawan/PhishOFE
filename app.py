@@ -61,7 +61,7 @@ if st.button("Check URL"):
             df['TLD'] = tld_encoder.fit_transform(df['TLD'])
 
             x = df_encoded.to_numpy()
-            st.dataframe(df_encoded)
+            st.dataframe(df)
             
             # Use the model to predict
             y = model.predict(x)[0] 
