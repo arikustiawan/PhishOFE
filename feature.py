@@ -1,6 +1,7 @@
 import re
 import urllib.request
 from bs4 import BeautifulSoup
+from collections import defaultdict
 #import whois
 from urllib.parse import urlparse
 from sklearn.preprocessing import LabelEncoder
@@ -23,6 +24,7 @@ class FeatureExtraction:
         self.urlparse = None
         self.response = None
         self.soup = ""
+        self.d = defaultdict(LabelEncoder)
 
         try:
             self.response = requests.get(url)
@@ -111,7 +113,7 @@ class FeatureExtraction:
     def tld(self):
         try:
             tld = self.domain.split('.')[-1] if '.' in self.domain else ''
-            tld = self.label_encoder.fit([tld])
+            #tld = self.label_encoder.fit([tld])
             return tld
         except:
             return ""
@@ -319,4 +321,5 @@ class FeatureExtraction:
         return interactive_element_density
 
     def getFeaturesList(self):
+        self.features = self.features.apply(lambda x: d[x.name].fit_transform(x))
         return self.features
