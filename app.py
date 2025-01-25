@@ -124,7 +124,7 @@ st.markdown(
     """
     <header>
         <div class="logo">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/MMU_Logo.png" alt="MMU Logo">
+            <img src="logo.jpg" alt="MMU Logo">
             <h1>PHISHING URL DETECTION USING MACHINE LEARNING</h1>
         </div>
         <nav class="menu">
