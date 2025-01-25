@@ -44,7 +44,7 @@ if st.button("Check URL"):
             #features_df = pd.DataFrame([features])
             
             # Use the model to predict
-            x = np.array(features.getFeaturesList()).reshape(1,33) 
+            x = np.array(extractor.getFeaturesList()).reshape(1,33) 
             prediction = model.predict(x)[0] 
             st.write("predict ok")
             
