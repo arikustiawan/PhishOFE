@@ -3,6 +3,7 @@ import urllib.request
 from bs4 import BeautifulSoup
 #import whois
 from urllib.parse import urlparse
+from sklearn.preprocessing import LabelEncoder
 
 #import ipaddress
 #import socket
@@ -110,6 +111,7 @@ class FeatureExtraction:
     def tld(self):
         try:
             tld = self.domain.split('.')[-1] if '.' in self.domain else ''
+            tld = self.label_encoder.fit([tld])
             return tld
         except:
             return ""
