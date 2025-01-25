@@ -13,7 +13,7 @@ except FileNotFoundError:
     st.error("Model file not found. Please ensure 'model.pkl' is in the same directory.")
     st.stop()
 except Exception as e:
-    st.error(f"Error loading the model: {e}")
+    st.error("Error loading the model: {e}")
     st.stop()
 
 # Set up the Streamlit app
