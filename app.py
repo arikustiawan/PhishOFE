@@ -18,6 +18,16 @@ except Exception as e:
 # Set up the Streamlit app
 st.set_page_config(page_title="Phishing URL Detection", layout="centered")
 
+st.markdown(
+    """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Custom CSS styling to make the header and footer full width, center the content
 st.markdown(
     """
