@@ -5,7 +5,7 @@ from collections import defaultdict
 #import whois
 from urllib.parse import urlparse
 from sklearn.preprocessing import LabelEncoder
-
+import pandas as pd
 #import ipaddress
 #import socket
 import requests
