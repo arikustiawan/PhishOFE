@@ -40,6 +40,7 @@ st.markdown(
             top: 5; 
             left: 0; 
             z-index: 1000; 
+            height: 60px;
         }
         header .logo {
             display: flex;
