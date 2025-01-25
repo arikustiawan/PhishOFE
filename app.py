@@ -18,16 +18,6 @@ except Exception as e:
 # Set up the Streamlit app
 st.set_page_config(page_title="Phishing URL Detection", layout="centered")
 
-st.markdown(
-    """
-    <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 # Custom CSS styling to make the header and footer full width, center the content
 st.markdown(
     """
@@ -103,7 +93,8 @@ st.markdown(
     """
     <header>
         <div class="logo">
-            <h3>PHISHING URL DETECTION USING MACHINE LEARNING</h3>
+            <img src="logo.jpg" alt="MMU Logo">
+            <h1>PHISHING URL DETECTION USING MACHINE LEARNING</h1>
         </div>
         <nav class="menu">
             <a href="#">Upload Dataset</a>
@@ -116,13 +107,6 @@ st.markdown(
 )
 
 # Input Section
-st.markdown(
-    """
-    <div class="container">
-        <h2>ENTER URL:</h2>
-    """,
-    unsafe_allow_html=True,
-)
 
 url_input = st.text_input("Enter URL", key="url_input")
 
