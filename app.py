@@ -40,7 +40,7 @@ st.markdown(
             top: 5; 
             left: 0; 
             z-index: 1000; 
-            height: 150px;
+            height: 100px;
         }
         header .logo {
             display: flex;
@@ -71,7 +71,7 @@ st.markdown(
             justify-content: center; /* Center items horizontally */
             align-items: center; /* Center items vertically */
             text-align: center; /* Optional: Center-align text inside */
-            margin-top: 300px;
+            margin-top: 150px;
          
         }
         .container h2 {
