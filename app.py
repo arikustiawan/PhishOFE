@@ -49,9 +49,9 @@ if st.button("Check URL"):
             d = defaultdict(LabelEncoder)
             df = df.apply(lambda x: d[x.name].fit_transform(x))
 
-            test = df.to_numpy()
+            x = df.to_numpy()
             # Use the model to predict
-            y = model.predict(test)[0] 
+            y = model.predict(x)[0] 
             st.write("predict ok")
 
             y_pro_phishing = model.predict_proba(x)[0,0]
