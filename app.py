@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from collections import defaultdict
 from feature import FeatureExtraction
-
+from sklearn.preprocessing import LabelEncoder
 # Load the trained model
 try:
     model = joblib.load("model.pkl")
