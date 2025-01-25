@@ -53,7 +53,7 @@ if st.button("Check URL"):
             # Use the model to predict
             prediction = model.predict(test)[0] 
             st.write("predict ok")
-            
+            st.write(prediction)
             # Display the result
             result = "Legitimate" if prediction == 0 else "Phishing"
             st.success(f"The URL is classified as: **{result}**")
