@@ -37,7 +37,7 @@ if st.button("Check URL"):
                 'NoOfPopup', 'NoOfiFrame', 'NoOfImage', 'NoOfJS', 'NoOfCSS', 'NoOfURLRedirect',
                 'NoOfHyperlink', 'SuspiciousCharRatio', 'URLComplexityScore', 'HTMLContentDensity', 'InteractiveElementDensity'
             ]
-            features_df = pd.DataFrame([features], columns=feature_names)
+            features_df = pd.DataFrame([features])
             
             # Use the model to predict
             prediction = model.predict(features_df.iloc[:, 1:])[0]  # Skip the URL itself
