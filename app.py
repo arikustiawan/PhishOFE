@@ -68,6 +68,7 @@ st.markdown(
             font-size: 1.25rem;
             color: #004b93;
             margin-bottom: 20px;
+            align-items: center;
         }
         .container input {
             width: 80%;
