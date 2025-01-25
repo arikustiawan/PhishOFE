@@ -334,7 +334,7 @@ class FeatureExtraction:
         #print("getFeaturesList ok")
         return self.features
 
-    def getLabelEncoder(self.data):
+    def getLabelEncoder(self,data):
         #df = pd.DataFrame(self.features)
         d = defaultdict(LabelEncoder)
         #df = df.apply(lambda x: d[x.name].fit_transform(x))
