@@ -49,9 +49,9 @@ if st.button("Check URL"):
             st.write("Label Encoder")
             #d = defaultdict(LabelEncoder)
             #df_encoded = df.apply(lambda x: d[x.name].fit_transform(x) if x.dtype == 'object' else x)
-            df_encoded =  extractor.getLabelEncode(df)
+            df_encoded =  extractor.getLabelEncoder(df)
             x = df_encoded .to_numpy()
-            st.dataframe(df_encoded )
+            st.dataframe(df_encoded)
             
             # Use the model to predict
             y = model.predict(x)[0] 
