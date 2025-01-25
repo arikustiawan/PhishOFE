@@ -18,7 +18,7 @@ except Exception as e:
 # Set up the Streamlit app
 st.set_page_config(page_title="Phishing URL Detection", layout="centered")
 
-# Custom CSS styling to match your HTML
+# Custom CSS styling to make the header and footer full width, center the content
 st.markdown(
     """
     <style>
@@ -40,6 +40,9 @@ st.markdown(
             justify-content: space-between;
             padding: 10px 20px;
             box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
 
         header h1 {
@@ -62,7 +65,7 @@ st.markdown(
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin: auto;
-            margin-top: 50px;
+            margin-top: 100px;
         }
 
         .container h2 {
@@ -78,6 +81,7 @@ st.markdown(
             padding: 10px 0;
             position: fixed;
             bottom: 0;
+            left: 0;
         }
     </style>
     """,
