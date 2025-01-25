@@ -16,11 +16,11 @@ except Exception as e:
     st.stop()
 # Streamlit page configuration
 st.set_page_config(
-    page_title="Phishing URL Detection",
+    page_title="Predict URL",
     layout="wide",
     initial_sidebar_state="expanded"
 )
-st.sidebar.title("Predict URL")
+#st.sidebar.title("Predict URL")
 
 # Main page content
 st.title("Phishing URL Detection Using Machine Learning")
