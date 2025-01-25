@@ -20,6 +20,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+st.sidebar.title("Predict URL")
 
 # Main page content
 st.title("Phishing URL Detection Using Machine Learning")
