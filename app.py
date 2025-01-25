@@ -53,7 +53,7 @@ if st.button("Check URL"):
             #df_encoded = df.apply(lambda x: d[x.name].fit_transform(x) if x.dtype == 'object' else x)
             #df_encoded =  extractor.getLabelEncoder(df)
             #df_encoded = extractor.getLabelEncoder()
-            x = df_encoded .to_numpy()
+            x = df_encoded.to_numpy()
             st.dataframe(df_encoded)
             
             # Use the model to predict
