@@ -46,11 +46,13 @@ if st.button("Check URL"):
             obj = np.array(extractor.getFeaturesList()).reshape(1,33) 
             df = pd.DataFrame(obj)
             st.dataframe(df)
-            
+
+            st.write("predict ok")
             d = defaultdict(LabelEncoder)
             df = df.apply(lambda x: d[x.name].fit_transform(x))
-
             x = df.to_numpy()
+            st.dataframe(df)
+            
             # Use the model to predict
             y = model.predict(x)[0] 
             st.write("predict ok")
