@@ -6,3 +6,4 @@ streamlit
 requests
 beautifulsoup4
 lightgbm
+streamlit-option-menu
