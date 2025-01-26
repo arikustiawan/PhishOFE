@@ -26,7 +26,19 @@ st.set_page_config(
 # Main page content
 st.title("Phishing URL Detection Using Machine Learning")
 #st.write("Welcome to the phishing URL detection app! Use the sidebar to navigate between pages.")
+# Sidebar navigation
+page = st.sidebar.radio(
+    "Navigation",  # Sidebar header
+    ["Predict URL", "Upload Dataset", "Performance Analysis"]  # Sidebar options
+)
 
+# Render the selected page
+if page == "Predict URL":
+    st.title("Predict URL")
+    st.write("This page performs URL predictions.")
+elif page == "Upload Dataset":
+    st.title("Upload Dataset")
+    st.write("Upload your dataset here.")
 # Set up the Streamlit app
 #st.set_page_config(page_title="Phishing URL Detection", layout="centered")
 #st.title("Phishing URL Detection Using Machine Learning")
