@@ -15,6 +15,9 @@ except Exception as e:
     st.error(f"Error loading the model: {e}")
     st.stop()
 # Streamlit page configuration
+
+st.sidebar.image("logo.jpg", use_column_width=True)
+
 st.set_page_config(
     page_title="Predict URL",
     layout="wide",
@@ -30,7 +33,7 @@ st.title("Phishing URL Detection Using Machine Learning")
 # Set up the Streamlit app
 #st.set_page_config(page_title="Phishing URL Detection", layout="centered")
 #st.title("Phishing URL Detection Using Machine Learning")
-st.sidebar.image("logo.jpg", use_column_width=True)
+
 
 # Input Section
 st.write("Enter a URL to classify as Legitimate or Phishing:")
