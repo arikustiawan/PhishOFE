@@ -14,10 +14,8 @@ except FileNotFoundError:
 except Exception as e:
     st.error(f"Error loading the model: {e}")
     st.stop()
+
 # Streamlit page configuration
-
-st.sidebar.image("logo.jpg", use_column_width=True)
-
 st.set_page_config(
     page_title="Predict URL",
     layout="wide",
@@ -25,7 +23,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"  
 )
 #st.sidebar.title("Predict URL")
-
+st.sidebar.image("logo.jpg", use_column_width=True)
 # Main page content
 st.title("Phishing URL Detection Using Machine Learning")
 #st.write("Welcome to the phishing URL detection app! Use the sidebar to navigate between pages.")
