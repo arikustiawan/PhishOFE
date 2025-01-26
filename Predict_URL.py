@@ -42,9 +42,9 @@ if st.button("Check URL"):
         try:
             # Extract features using the FeatureExtraction class
             extractor = FeatureExtraction(url_input)
-            st.write("extractor ok")
+            #st.write("extractor ok")
             features = extractor.getFeaturesList()
-            st.write("feature ok")
+            #st.write("feature ok")
             # Convert features to a DataFrame (expected input format for the model)
             feature_names = [
                 'IsHTTPS', 'TLD', 'URLLength', 'NoOfSubDomain', 'NoOfDots', 'NoOfObfuscatedChar',   
@@ -58,9 +58,9 @@ if st.button("Check URL"):
 
             obj = np.array(extractor.getFeaturesList()).reshape(1,len(feature_names)) 
             df = pd.DataFrame(obj,columns=feature_names)
-            st.dataframe(df)
+            #st.dataframe(df)
 
-            st.write("Label Encoder")
+            #st.write("Label Encoder")
             tld_encoder = LabelEncoder()
 
             # Encode the TLD column
@@ -68,7 +68,7 @@ if st.button("Check URL"):
             df_encoded = df.copy()
 
             x = df_encoded.to_numpy()
-            st.dataframe(df_encoded)
+            #st.dataframe(df_encoded)
             
             # Use the model to predict
             y = model.predict(x)
@@ -82,8 +82,8 @@ if st.button("Check URL"):
             # Display the result
             pred = y_prob_phishing*100
             pred2 = y_prob_non_phishing*100
-            st.success({pred})
-            st.success({pred2})
+            #st.success({pred})
+            #st.success({pred2})
             result = "Phishing" if pred >= 99 else "Legitimate"
             st.success(f"The URL is classified as: **{result}**")
         except Exception as e:
