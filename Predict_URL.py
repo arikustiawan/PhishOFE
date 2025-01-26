@@ -35,7 +35,7 @@ st.title("Phishing URL Detection Using Machine Learning")
 
 # Input Section
 #st.write("Enter a URL to classify as Legitimate or Phishing:")
-url_input = st.text_input("nter a URL to classify as Legitimate or Phishing:")
+url_input = st.text_input("Enter a URL to classify as Legitimate or Phishing:")
 
 if st.button("Check URL"):
     if url_input:
