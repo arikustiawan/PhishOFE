@@ -27,10 +27,11 @@ st.set_page_config(
 st.sidebar.image("path_to_logo.jpg", use_column_width=True)
 
 # Add other sidebar elements
-st.sidebar.title("Predict URL")
-st.sidebar.write("Upload Dataset")
+
 # Main page content
 st.title("Phishing URL Detection Using Machine Learning")
+st.sidebar.title("Predict URL")
+st.sidebar.write("Upload Dataset")
 #st.write("Welcome to the phishing URL detection app! Use the sidebar to navigate between pages.")
 # Sidebar navigation
 # Set up the Streamlit app
