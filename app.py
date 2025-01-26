@@ -1,28 +1,21 @@
 import streamlit as st
-from streamlit_option_menu import option_menu
 
-# Configure the page first
-st.set_page_config(
-    page_title="Phishing URL Detection",
-    page_icon="🔗",
-    layout="wide",
-    initial_sidebar_state="expanded"
+# --- PAGE SETUP ---
+Predict_page = st.Page(
+    page="pages/1_Predict_URL_.py",
+    title="Predict URL",
+    icon=":material/account_circle:",
+    default=True,
 )
 
-# Sidebar menu with default page set to "Predict URL"
-with st.sidebar:
-    selected = option_menu(
-        menu_title=None,  # No title for the menu
-        options=["Predict URL", "Projects", "Contact"],  # Menu options
-        icons=["house", "book", "envelope"],  # Icons for the menu
-        default_index=0  # Default to the first item (index 0 corresponds to "Predict URL")
-    )
+Upload_page = st.Page(
+    page="views/sales_dashboard.py",
+    title="Sales Dashboard",
+    icon=":material/bar_chart:",
+)
 
-if selected == "Predict URL":
-    # Include the logic or content for the Predict URL page
-    st.title(f"You have selected {selected}")
-    exec(open("pages/Predict_URL.py").read())  # Executes the code from Predict_URL.py
-if selected == "Projects":
-    st.title(f"You have selected {selected}")
-if selected == "Contact":
-    st.title(f"You have selected {selected}")
+Performance_page = st.Page(
+    page="views/chatbot.py",
+    title="Chat Bot",
+    icon=":material/smart_toy:",
+)
