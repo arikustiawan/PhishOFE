@@ -30,6 +30,7 @@ st.title("Phishing URL Detection Using Machine Learning")
 # Set up the Streamlit app
 #st.set_page_config(page_title="Phishing URL Detection", layout="centered")
 #st.title("Phishing URL Detection Using Machine Learning")
+st.sidebar.image("logo.jpg", use_column_width=True)
 
 # Input Section
 st.write("Enter a URL to classify as Legitimate or Phishing:")
