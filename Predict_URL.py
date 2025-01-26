@@ -15,6 +15,8 @@ except Exception as e:
     st.error(f"Error loading the model: {e}")
     st.stop()
 
+st.image("logo.jpg", use_container_width=True)
+
 # Streamlit page configuration
 st.set_page_config(
     page_title="Predict URL",
@@ -24,7 +26,7 @@ st.set_page_config(
 )
 #st.sidebar.title("Predict URL")
 # Add a logo to the top of the sidebar
-st.sidebar.image("logo.jpg", use_container_width=True)
+#st.sidebar.image("logo.jpg", use_container_width=True)
 
 # Add other sidebar elements
 
