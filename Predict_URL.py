@@ -23,7 +23,12 @@ st.set_page_config(
     initial_sidebar_state="expanded"  
 )
 #st.sidebar.title("Predict URL")
-st.sidebar.image("logo.jpg", use_column_width=True)
+# Add a logo to the top of the sidebar
+st.sidebar.image("path_to_logo.jpg", use_container_width=True)
+
+# Add other sidebar elements
+st.sidebar.title("Predict URL")
+st.sidebar.write("Upload Dataset")
 # Main page content
 st.title("Phishing URL Detection Using Machine Learning")
 #st.write("Welcome to the phishing URL detection app! Use the sidebar to navigate between pages.")
