@@ -24,7 +24,7 @@ st.set_page_config(
 )
 #st.sidebar.title("Predict URL")
 # Add a logo to the top of the sidebar
-st.sidebar.image("ogo.jpg", use_container_width=True)
+st.sidebar.image("logo.jpg", use_container_width=True)
 
 # Add other sidebar elements
 
