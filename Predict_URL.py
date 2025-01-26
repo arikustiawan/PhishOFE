@@ -30,14 +30,6 @@ st.sidebar.image("logo.jpg", use_container_width=True)
 
 # Main page content
 st.title("Phishing URL Detection Using Machine Learning")
-st.sidebar.title("Predict URL")
-st.sidebar.write("Upload Dataset")
-#st.write("Welcome to the phishing URL detection app! Use the sidebar to navigate between pages.")
-# Sidebar navigation
-# Set up the Streamlit app
-#st.set_page_config(page_title="Phishing URL Detection", layout="centered")
-#st.title("Phishing URL Detection Using Machine Learning")
-
 
 # Input Section
 st.write("Enter a URL to classify as Legitimate or Phishing:")
