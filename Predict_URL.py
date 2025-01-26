@@ -82,8 +82,8 @@ if st.button("Check URL"):
             # Display the result
             pred = y_prob_phishing*100
             pred2 = y_prob_non_phishing*100
-            #st.success({pred})
-            #st.success({pred2})
+            st.success({pred})
+            st.success({pred2})
             result = "Phishing" if pred >= 99.9 else "Legitimate"
             st.success(f"The URL is classified as: **{result}**")
         except Exception as e:
