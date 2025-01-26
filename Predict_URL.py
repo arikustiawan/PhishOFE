@@ -31,11 +31,11 @@ st.sidebar.image("logo.jpg", use_container_width=True)
 # Add other sidebar elements
 
 # Main page content
-st.title("Phishing URL Detection\nUsing Machine Learning")
+st.title("Phishing URL Detection Using Machine Learning")
 
 # Input Section
-st.write("Enter a URL to classify as Legitimate or Phishing:")
-url_input = st.text_input("URL")
+#st.write("Enter a URL to classify as Legitimate or Phishing:")
+url_input = st.text_input("Enter a URL")
 
 if st.button("Check URL"):
     if url_input:
