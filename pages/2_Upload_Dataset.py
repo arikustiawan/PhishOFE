@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 import os
-from ..training import TrainingPipeline 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from training import TrainingPipeline 
 
 st.title("Upload Dataset")
 st.sidebar.image("logo.jpg", use_container_width=True)
