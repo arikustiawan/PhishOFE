@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 
-current_dir = os.getcwd()
+current_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the current script
 sys.path.append(os.path.abspath(os.path.join(current_dir, "..")))
 from training import TrainingPipeline 
 
