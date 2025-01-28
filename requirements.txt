@@ -6,3 +6,6 @@ streamlit
 requests
 beautifulsoup4
 lightgbm
+boruta
+matplotlib
+seaborn
