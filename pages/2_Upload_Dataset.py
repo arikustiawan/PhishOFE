@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+import subprocess
 
 st.title("Upload Dataset")
 st.sidebar.image("logo.jpg", use_container_width=True)
