@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+current_dir = os.getcwd()
+sys.path.append(os.path.abspath(os.path.join(current_dir, "..")))
 from training import TrainingPipeline 
 
 st.title("Upload Dataset")
