@@ -125,3 +125,8 @@ acc_test_lgbm = metrics.accuracy_score(y_test,y_test_lgbm)
 f1_score_test_lgbm = metrics.f1_score(y_test,y_test_lgbm)
 recall_score_test_lgbm = metrics.recall_score(y_test,y_test_lgbm)
 precision_score_test_lgbm = metrics.precision_score(y_test,y_test_lgbm)
+
+print("Accuracy: {:.3f}".format(acc_test_lgbm))
+print("Precision: {:.3f}".format(precision_score_test_lgbm))
+print("Recall: {:.3f}".format(recall_score_test_lgbm))
+print("F1 Score: {:.3f}".format(f1_score_test_lgbm))
