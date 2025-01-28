@@ -38,23 +38,18 @@ if uploaded_file is not None:
     if st.button("Train Dataset"):
         try:
             # Initialize the TrainingPipeline class
-            pipeline = TrainingPipeline(dataset_path=file_path)
-                
-            # Execute the training steps
-            pipeline.load_data()
-            pipeline.add_features()
-            pipeline.preprocess_data()
-            pipeline.feature_selection()
-            pipeline.train_model()
-                
-            # Display training success
-            st.success("Model training completed!")
-                
-            # Display model performance metrics
+            pipeline = TrainingPipeline(file_path)
+
+            # Run the full pipeline
+            results = pipeline.run_pipeline()
+
+            # Display training metrics
+            st.success("Model training completed successfully!")
             st.write("### Training Metrics:")
-            st.write(f"- **Accuracy**: {pipeline.model.score(pipeline.features, pipeline.target):.2f}")
-            #st.write("### Visualization:")
-            #st.pyplot(pipeline.plot_metrics())  # Plot ROC and Precision-Recall curves
+            st.write(f"- **Accuracy**: {results['test_accuracy']:.3f}")
+            st.write(f"- **Precision**: {results['precision']:.3f}")
+            st.write(f"- **Recall**: {results['recall']:.3f}")
+            st.write(f"- **F1 Score**: {results['f1_score']:.3f}")
                 
         except Exception as e:
             st.error(f"An error occurred during training: {e}")
