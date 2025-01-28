@@ -59,6 +59,6 @@ if uploaded_file is not None:
         except Exception as e:
             st.error(f"An error occurred during training: {e}")
         except Exception as e:
-            st.error(f"Error loading the file: {e}"
+            st.error(f"Error loading the file: {e}")
 else:
     st.info("Please upload a dataset to get started.")
