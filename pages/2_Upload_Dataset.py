@@ -15,6 +15,8 @@ if uploaded_file is not None:
     # Save the file to the 'dataset' folder
     file_path = os.path.join("dataset", uploaded_file.name)
     try:
+        with open(file_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
         # Read the uploaded CSV file
         data = pd.read_csv(uploaded_file)
         
