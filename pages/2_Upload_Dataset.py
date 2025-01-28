@@ -3,7 +3,11 @@ import pandas as pd
 import os
 
 st.title("Upload Dataset")
+st.sidebar.image("logo.jpg", use_container_width=True)
 
+if not os.path.exists("dataset"):
+    os.makedirs("dataset")
+    
 # Upload CSV file
 uploaded_file = st.file_uploader("Upload your dataset (CSV file only)", type=["csv"])
 
@@ -26,7 +30,7 @@ if uploaded_file is not None:
 
         # Show dataset information
         st.write("Dataset Information:")
-        st.text(data.info())  # Using st.text for info()
+        st.text(data.info())
     except Exception as e:
         st.error(f"Error loading the file: {e}")
 else:
