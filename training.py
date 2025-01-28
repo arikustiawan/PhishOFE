@@ -4,129 +4,83 @@ import seaborn as sns
 import numpy as np
 from boruta import BorutaPy
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import LabelEncoder
-from collections import defaultdict
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.model_selection import train_test_split
-
-from sklearn.metrics import roc_curve
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import precision_recall_curve
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-from sklearn import metrics 
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import (
+    roc_curve,
+    roc_auc_score,
+    precision_recall_curve,
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+)
 from lightgbm import LGBMClassifier
+from collections import defaultdict
 
 
-df = pd.read_csv("dataset/Legitimate_Phishing_Dataset.csv")
+class TrainingPipeline:
+    def __init__(self, dataset_path):
+        self.dataset_path = dataset_path
+        self.data = None
+        self.model = None
+        self.features = None
+        self.target = None
 
-def SuspiciousCharRatio(data):
-    data['SuspiciousCharRatio'] = (
-            data['NoOfObfuscatedChar'] +
-            data['NoOfEqual'] +
-            data['NoOfQmark'] +
-            data['NoOfAmp']
-        ) / data['URLLength']
-    return data
+    def load_data(self):
+        """Load the dataset from the provided path."""
+        self.data = pd.read_csv(self.dataset_path)
+        print("Dataset loaded successfully!")
 
-def SuspiciousCharRatio(data):
-    data['SuspiciousCharRatio'] = (
-            data['NoOfObfuscatedChar'] +
-            data['NoOfEqual'] +
-            data['NoOfQmark'] +
-            data['NoOfAmp']
-        ) / data['URLLength']
-    return data
+    def add_features(self):
+        """Add derived features to the dataset."""
+        self.data['SuspiciousCharRatio'] = (
+            self.data['NoOfObfuscatedChar']
+            + self.data['NoOfEqual']
+            + self.data['NoOfQmark']
+            + self.data['NoOfAmp']
+        ) / self.data['URLLength']
 
-def HTMLContentDensity(data):
-    data['HTMLContentDensity'] = (
-            data['LineLength'] + data['NoOfImage']
-        ) / (
-            data['NoOfJS'] + data['NoOfCSS'] + data['NoOfiFrame'] + 1
-        )    
-    return data
+        print("Derived features added.")
 
-def InteractiveElementDensity(data):
-    data['InteractiveElementDensity'] = (
-            data['HasSubmitButton'] +
-            data['HasPasswordField'] +
-            data['NoOfPopup']
-        ) / (
-            data['LineLength'] + data['NoOfImage']
+    def preprocess_data(self):
+        """Preprocess the dataset by encoding labels and scaling features."""
+        label_encoder = LabelEncoder()
+        self.data['Label'] = label_encoder.fit_transform(self.data['Label'])
+        self.features = self.data.drop('Label', axis=1)
+        self.target = self.data['Label']
+
+        scaler = MinMaxScaler()
+        self.features = pd.DataFrame(
+            scaler.fit_transform(self.features), columns=self.features.columns
         )
-    return data
 
-df = SuspiciousCharRatio(df)
-df = URLComplexityScore(df)
-df = HTMLContentDensity(df)
-df = InteractiveElementDensity(df)
+        print("Data preprocessing complete.")
 
-d = defaultdict(LabelEncoder)
-df = df.apply(lambda x: d[x.name].fit_transform(x))
-df_FS = df.copy()
+    def feature_selection(self):
+        """Perform feature selection using Boruta."""
+        rf = RandomForestClassifier(n_jobs=-1, max_depth=5)
+        boruta_selector = BorutaPy(rf, n_estimators='auto', random_state=42)
+        boruta_selector.fit(self.features.values, self.target.values)
 
-# Define 'y' as the target variable (label column)
-y = df_FS['label']
-X = df_FS.drop(columns=['label','URL'])
+        # Update features with selected ones
+        self.features = self.features.loc[:, boruta_selector.support_]
+        print("Feature selection complete.")
 
-# Define a ranking function
-def ranking(ranks, names, order=1):
-    minmax = MinMaxScaler()
-    ranks = minmax.fit_transform(order * np.array([ranks]).T).T[0]
-    ranks = map(lambda x: round(x, 2), ranks)
-    return dict(zip(names, ranks))
+    def train_model(self):
+        """Train a LightGBM model on the dataset."""
+        X_train, X_test, y_train, y_test = train_test_split(
+            self.features, self.target, test_size=0.2, random_state=42
+        )
+        self.model = LGBMClassifier()
+        self.model.fit(X_train, y_train)
+        predictions = self.model.predict(X_test)
 
-# Initialize RandomForestClassifier for Boruta
-rf = RandomForestClassifier(
-    n_jobs=-1, 
-    class_weight="balanced_subsample", 
-    max_depth=5, 
-    n_estimators="auto"  # Adjust n_estimators to a specific value since 'auto' is not valid for this parameter
-)
+        # Evaluate the model
+        accuracy = accuracy_score(y_test, predictions)
+        precision = precision_score(y_test, predictions)
+        recall = recall_score(y_test, predictions)
+        f1 = f1_score(y_test, predictions)
 
-# Initialize Boruta Feature Selector
-feat_selector = BorutaPy(rf, n_estimators='auto', random_state=1)
-
-# Fit Boruta to the dataset
-feat_selector.fit(X.values, y.values.ravel())
-
-# Generate feature rankings
-boruta_score = ranking(
-    list(map(float, feat_selector.ranking_)), 
-    X.columns,  # Use X.columns to provide feature names
-    order=-1
-)
-
-# Convert rankings into a DataFrame
-boruta_score = pd.DataFrame(list(boruta_score.items()), columns=['Features', 'Score'])
-boruta_score = boruta_score.sort_values("Score", ascending=False)
-
-selected_features = X.columns[feat_selector.support_].tolist()
-
-# Use only the selected features
-X_selected = X[selected_features]
-
-# Split for model training
-X_train, X_test, y_train, y_test = train_test_split(X_selected, y, test_size = 0.2, random_state = 42)
-X_train.shape, y_train.shape, X_test.shape, y_test.shape
-
-# Instantiate the model
-lgbm = LGBMClassifier(n_estimators=100, learning_rate=0.1, max_depth=-1, random_state=42)
-
-# Fit the model
-lgbm.fit(X_train, y_train)
-
-# Predicting the target value from the model for the samples
-y_train_lgbm = lgbm.predict(X_train)
-y_test_lgbm = lgbm.predict(X_test)
-
-#computing the accuracy, f1_score, Recall, precision of the model performance
-
-acc_test_lgbm = metrics.accuracy_score(y_test,y_test_lgbm)
-f1_score_test_lgbm = metrics.f1_score(y_test,y_test_lgbm)
-recall_score_test_lgbm = metrics.recall_score(y_test,y_test_lgbm)
-precision_score_test_lgbm = metrics.precision_score(y_test,y_test_lgbm)
-
-print("Accuracy: {:.3f}".format(acc_test_lgbm))
-print("Precision: {:.3f}".format(precision_score_test_lgbm))
-print("Recall: {:.3f}".format(recall_score_test_lgbm))
-print("F1 Score: {:.3f}".format(f1_score_test_lgbm))
+        print(f"Model training complete! Accuracy: {accuracy:.2f}")
+        print(f"Precision: {precision:.2f}, Recall: {recall:.2f}, F1 Score: {f1:.2f}")
