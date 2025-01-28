@@ -1,22 +1,12 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 from boruta import BorutaPy
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import (
-    roc_curve,
-    roc_auc_score,
-    precision_recall_curve,
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-)
-from lightgbm import LGBMClassifier
 from collections import defaultdict
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+from lightgbm import LGBMClassifier
 
 
 class TrainingPipeline:
@@ -24,63 +14,126 @@ class TrainingPipeline:
         self.dataset_path = dataset_path
         self.data = None
         self.model = None
-        self.features = None
-        self.target = None
+        self.selected_features = None
+        self.X_train, self.X_test, self.y_train, self.y_test = None, None, None, None
 
     def load_data(self):
-        """Load the dataset from the provided path."""
+        """Load dataset from the given path."""
         self.data = pd.read_csv(self.dataset_path)
         print("Dataset loaded successfully!")
 
-    def add_features(self):
-        """Add derived features to the dataset."""
-        self.data['SuspiciousCharRatio'] = (
-            self.data['NoOfObfuscatedChar']
-            + self.data['NoOfEqual']
-            + self.data['NoOfQmark']
-            + self.data['NoOfAmp']
-        ) / self.data['URLLength']
+    def SuspiciousCharRatio(data):
+    data['SuspiciousCharRatio'] = (
+            data['NoOfObfuscatedChar'] +
+            data['NoOfEqual'] +
+            data['NoOfQmark'] +
+            data['NoOfAmp']
+        ) / data['URLLength']
+    return data
 
-        print("Derived features added.")
+    def URLComplexityScore(data):
+        # Calculate the first term: (URLLength + NoOfSubDomain + NoOfObfuscatedChar) / URLLength
+        first_term = (
+            data['URLLength'] + 
+            data['NoOfSubDomain'] + 
+            data['NoOfObfuscatedChar']
+        ) / data['URLLength']   
+    
+        # Calculate the second term: (NoOfEqual + NoOfAmp) / (NoOfQmark + 1)
+        second_term = (
+            data['NoOfEqual'] + 
+            data['NoOfAmp']
+        ) / (data['NoOfQmark'] + 1)
+    
+        data['URLComplexityScore'] = first_term + second_term
+        
+        return data
+
+    def HTMLContentDensity(data):
+        data['HTMLContentDensity'] = (
+                data['LineLength'] + data['NoOfImage']
+            ) / (
+                data['NoOfJS'] + data['NoOfCSS'] + data['NoOfiFrame'] + 1
+            )    
+        return data
+
+    def InteractiveElementDensity(data):
+        data['InteractiveElementDensity'] = (
+                data['HasSubmitButton'] +
+                data['HasPasswordField'] +
+                data['NoOfPopup']
+            ) / (
+                data['LineLength'] + data['NoOfImage']
+            )
+        return data
+
+    def add_features(self):
+        self.data = self.SuspiciousCharRatio(self.data)
+        self.data = self.URLComplexityScore(self.data)
+        self.data = self.HTMLContentDensity(self.data)
+        self.data = self.InteractiveElementDensity(self.data)
 
     def preprocess_data(self):
-        """Preprocess the dataset by encoding labels and scaling features."""
-        label_encoder = LabelEncoder()
-        self.data['Label'] = label_encoder.fit_transform(self.data['Label'])
-        self.features = self.data.drop('Label', axis=1)
-        self.target = self.data['Label']
-
-        scaler = MinMaxScaler()
-        self.features = pd.DataFrame(
-            scaler.fit_transform(self.features), columns=self.features.columns
-        )
-
+        """Preprocess the data by encoding and scaling."""
+        self.data = self.add_features(self.data)
+        d = defaultdict(LabelEncoder)
+        self.data = self.data.apply(lambda x: d[x.name].fit_transform(x))
         print("Data preprocessing complete.")
 
     def feature_selection(self):
         """Perform feature selection using Boruta."""
-        rf = RandomForestClassifier(n_jobs=-1, max_depth=5)
-        boruta_selector = BorutaPy(rf, n_estimators='auto', random_state=42)
-        boruta_selector.fit(self.features.values, self.target.values)
+        y = self.data['label']
+        X = self.data.drop(columns=['label', 'URL'])
 
-        # Update features with selected ones
-        self.features = self.features.loc[:, boruta_selector.support_]
-        print("Feature selection complete.")
+        rf = RandomForestClassifier(
+            n_jobs=-1,
+            class_weight="balanced_subsample",
+            max_depth=5,
+            n_estimators=100  # Use a specific value since 'auto' is invalid
+        )
+        feat_selector = BorutaPy(rf, n_estimators='auto', random_state=1)
+        feat_selector.fit(X.values, y.values.ravel())
+
+        self.selected_features = X.columns[feat_selector.support_].tolist()
+        print("Feature selection complete. Selected features:", self.selected_features)
+
+        return X[self.selected_features], y
+
+    def train_test_split(self, X, y):
+        """Split the data into training and test sets."""
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42
+        )
+        print("Data split into training and test sets.")
 
     def train_model(self):
-        """Train a LightGBM model on the dataset."""
-        X_train, X_test, y_train, y_test = train_test_split(
-            self.features, self.target, test_size=0.2, random_state=42
-        )
-        self.model = LGBMClassifier()
-        self.model.fit(X_train, y_train)
-        predictions = self.model.predict(X_test)
+        """Train the LightGBM model."""
+        self.model = LGBMClassifier(n_estimators=100, learning_rate=0.1, max_depth=-1, random_state=42)
+        self.model.fit(self.X_train, self.y_train)
 
-        # Evaluate the model
-        accuracy = accuracy_score(y_test, predictions)
-        precision = precision_score(y_test, predictions)
-        recall = recall_score(y_test, predictions)
-        f1 = f1_score(y_test, predictions)
+        y_train_pred = self.model.predict(self.X_train)
+        y_test_pred = self.model.predict(self.X_test)
 
-        print(f"Model training complete! Accuracy: {accuracy:.2f}")
-        print(f"Precision: {precision:.2f}, Recall: {recall:.2f}, F1 Score: {f1:.2f}")
+        train_acc = metrics.accuracy_score(self.y_train, y_train_pred)
+        test_acc = metrics.accuracy_score(self.y_test, y_test_pred)
+
+        print(f"Training Accuracy: {train_acc:.3f}")
+        print(f"Test Accuracy: {test_acc:.3f}")
+
+        return {
+            "train_accuracy": train_acc,
+            "test_accuracy": test_acc,
+            "f1_score": metrics.f1_score(self.y_test, y_test_pred),
+            "recall": metrics.recall_score(self.y_test, y_test_pred),
+            "precision": metrics.precision_score(self.y_test, y_test_pred)
+        }
+
+    def runTraining(self):
+        """Run the entire training pipeline."""
+        self.load_data()
+        self.add_features()
+        self.preprocess_data()
+        X, y = self.feature_selection()
+        self.train_test_split(X, y)
+        metrics = self.train_model()
+        return metrics
