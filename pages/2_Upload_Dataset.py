@@ -35,30 +35,30 @@ if uploaded_file is not None:
         st.error(f"Error loading the file: {e}")
 
     # Add a button to train the model
-        if st.button("Train Dataset"):
-            try:
-                # Initialize the TrainingPipeline class
-                pipeline = TrainingPipeline(dataset_path=file_path)
+    if st.button("Train Dataset"):
+        try:
+            # Initialize the TrainingPipeline class
+            pipeline = TrainingPipeline(dataset_path=file_path)
                 
-                # Execute the training steps
-                pipeline.load_data()
-                pipeline.add_features()
-                pipeline.preprocess_data()
-                pipeline.feature_selection()
-                pipeline.train_model()
+            # Execute the training steps
+            pipeline.load_data()
+            pipeline.add_features()
+            pipeline.preprocess_data()
+            pipeline.feature_selection()
+            pipeline.train_model()
                 
-                # Display training success
-                st.success("Model training completed!")
+            # Display training success
+            st.success("Model training completed!")
                 
-                # Display model performance metrics
-                st.write("### Training Metrics:")
-                st.write(f"- **Accuracy**: {pipeline.model.score(pipeline.features, pipeline.target):.2f}")
-                st.write("### Visualization:")
-                st.pyplot(pipeline.plot_metrics())  # Plot ROC and Precision-Recall curves
+            # Display model performance metrics
+            st.write("### Training Metrics:")
+            st.write(f"- **Accuracy**: {pipeline.model.score(pipeline.features, pipeline.target):.2f}")
+            #st.write("### Visualization:")
+            #st.pyplot(pipeline.plot_metrics())  # Plot ROC and Precision-Recall curves
                 
-            except Exception as e:
-                st.error(f"An error occurred during training: {e}")
-    except Exception as e:
-        st.error(f"Error loading the file: {e}"
+        except Exception as e:
+            st.error(f"An error occurred during training: {e}")
+        except Exception as e:
+            st.error(f"Error loading the file: {e}"
 else:
     st.info("Please upload a dataset to get started.")
