@@ -30,9 +30,6 @@ if uploaded_file is not None:
         st.write("Dataset Preview:")
         st.dataframe(data.head())
 
-        # Show dataset information
-        st.write("Dataset Information:")
-        st.text(data.info())
     except Exception as e:
         st.error(f"Error loading the file: {e}")
 else:
