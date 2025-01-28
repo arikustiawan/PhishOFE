@@ -32,5 +32,27 @@ if uploaded_file is not None:
 
     except Exception as e:
         st.error(f"Error loading the file: {e}")
+
+    # Add a button to train the model
+    if st.button("Train Dataset"):
+        try:
+            # Run the training.py script and pass the dataset path
+            result = subprocess.run(
+                ["python", "training.py", "dataset/Legitimate_Phishing_Dataset.csv"],  # Add dataset path as an argument
+                capture_output=True, text=True
+            )
+            
+            # Display success message and output
+            st.success("Model training completed!")
+            
+            # Display calculation output
+            st.write("### Training Output:")
+            st.text(result.stdout)
+            
+            # Display errors if any
+            if result.stderr:
+                st.error(f"Training script encountered an error:\n{result.stderr}")
+        except Exception as e:
+            st.error(f"Error executing training script: {e}")
 else:
     st.info("Please upload a dataset to get started.")
