@@ -24,8 +24,8 @@ if "model_results" not in st.session_state:
 if "y_test" not in st.session_state:
     st.session_state.y_test = None
 
-if "y_train" not in st.session_state:
-    st.session_state.y_train = None
+if "y_pred_prob" not in st.session_state:
+    st.session_state.y_pred_prob = None
     
 # File uploader for CSV files
 uploaded_file = st.file_uploader("Upload your dataset (CSV file only)", type=["csv"])
@@ -139,6 +139,8 @@ class TrainingPipeline:
         y_train_pred = self.model.predict(self.X_train)
         y_test_pred = self.model.predict(self.X_test)
 
+        self.y_pred_prob = self.model.predict_proba(self.X_test)[:, 1]  # Get probabilities
+
         train_acc = metrics.accuracy_score(self.y_train, y_train_pred)
         test_acc = metrics.accuracy_score(self.y_test, y_test_pred)
 
@@ -162,7 +164,7 @@ class TrainingPipeline:
         metrics_result = self.train_model()
 
         st.session_state.y_test = self.y_test
-        st.session_state.y_train = self.y_train
+        st.session_state.y_pred_prob = self.y_pred_prob
         return metrics_result
 
 
