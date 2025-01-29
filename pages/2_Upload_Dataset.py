@@ -20,6 +20,12 @@ if not os.path.exists("dataset"):
     
 if "model_results" not in st.session_state:
     st.session_state.model_results = None
+
+if "y_test" not in st.session_state:
+    st.session_state.y_test = None
+
+if "y_pred_prob" not in st.session_state:
+    st.session_state.y_pred_prob = None
     
 # File uploader for CSV files
 uploaded_file = st.file_uploader("Upload your dataset (CSV file only)", type=["csv"])
@@ -35,12 +41,12 @@ class TrainingPipeline:
         self.X_train, self.X_test, self.y_train, self.y_test = None, None, None, None
 
     def load_data(self):
-        """Load dataset from the given path."""
+        #Load dataset from the given path
         self.data = pd.read_csv(self.dataset_path)
         print("Dataset loaded successfully!")
 
     def SuspiciousCharRatio(self, data):
-        """Calculate SuspiciousCharRatio."""
+        #Calculate SuspiciousCharRatio.
         data['SuspiciousCharRatio'] = (
             data['NoOfObfuscatedChar'] +
             data['NoOfEqual'] +
@@ -50,7 +56,7 @@ class TrainingPipeline:
         return data
 
     def URLComplexityScore(self, data):
-        """Calculate URL Complexity Score."""
+        #Calculate URL Complexity Score.
         first_term = (
             data['URLLength'] + 
             data['NoOfSubDomain'] + 
@@ -66,7 +72,7 @@ class TrainingPipeline:
         return data
 
     def HTMLContentDensity(self, data):
-        """Calculate HTML Content Density."""
+        #Calculate HTML Content Density.
         data['HTMLContentDensity'] = (
             data['LineLength'] + data['NoOfImage']
         ) / (
@@ -75,7 +81,7 @@ class TrainingPipeline:
         return data
 
     def InteractiveElementDensity(self, data):
-        """Calculate Interactive Element Density."""
+        #Calculate Interactive Element Density
         data['InteractiveElementDensity'] = (
             data['HasSubmitButton'] +
             data['HasPasswordField'] +
@@ -86,14 +92,14 @@ class TrainingPipeline:
         return data
 
     def add_features(self):
-        """Apply all feature engineering functions."""
+        #Apply all feature engineering functions."""
         self.data = self.SuspiciousCharRatio(self.data)
         self.data = self.URLComplexityScore(self.data)
         self.data = self.HTMLContentDensity(self.data)
         self.data = self.InteractiveElementDensity(self.data)
 
     def preprocess_data(self):
-        """Preprocess the data by encoding and scaling."""
+        #Preprocess the data by encoding and scaling
         self.add_features()
         d = defaultdict(LabelEncoder)
         self.data = self.data.apply(lambda x: d[x.name].fit_transform(x))
@@ -108,7 +114,7 @@ class TrainingPipeline:
             n_jobs=-1,
             class_weight="balanced_subsample",
             max_depth=5,
-            n_estimators=100  # Use a specific value since 'auto' is invalid
+            n_estimators=100 
         )
         feat_selector = BorutaPy(rf, n_estimators='auto', random_state=1)
         feat_selector.fit(X.values, y.values.ravel())
@@ -119,14 +125,14 @@ class TrainingPipeline:
         return X[self.selected_features], y
 
     def split_train_test(self, X, y):
-        """Split the data into training and test sets."""
+        #Split the data into training and test sets.
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, y, test_size=0.2, random_state=42
         )
         print("Data split into training and test sets.")
 
     def train_model(self):
-        """Train the LightGBM model."""
+        #Train the LightGBM model.
         self.model = LGBMClassifier(n_estimators=100, learning_rate=0.1, max_depth=-1, random_state=42)
         self.model.fit(self.X_train, self.y_train)
 
@@ -148,12 +154,15 @@ class TrainingPipeline:
         }
 
     def run_training(self):
-        """Run the entire training pipeline."""
+        
         self.load_data()
         self.preprocess_data()
         X, y = self.feature_selection()
         self.split_train_test(X, y)
         metrics_result = self.train_model()
+
+        st.session_state.y_test = self.y_test
+        st.session_state.y_pred_prob = self.y_pred_prob
         return metrics_result
 
 
