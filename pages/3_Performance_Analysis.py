@@ -11,10 +11,10 @@ if "model_results" in st.session_state and st.session_state.model_results:
 
     st.success("Model training results loaded successfully!")
     st.write("### Training Metrics:")
-    st.write(f"- **Accuracy**: {results['test_accuracy'] * 100:.4f}%")
-    st.write(f"- **Precision**: {results['precision'] * 100:.4f}%")
-    st.write(f"- **Recall**: {results['recall'] * 100:.4f}%")
-    st.write(f"- **F1 Score**: {results['f1_score'] * 100:.4f}%")
+    st.write(f"- **Accuracy**: {results['test_accuracy'] * 100:.2f}%")
+    st.write(f"- **Precision**: {results['precision'] * 100:.2f}%")
+    st.write(f"- **Recall**: {results['recall'] * 100:.2f}%")
+    st.write(f"- **F1 Score**: {results['f1_score'] * 100:.2f}%")
 
     # Ensure session state has y_test and y_pred_prob for plots
     if "y_test" in st.session_state and "y_pred_prob" in st.session_state:
