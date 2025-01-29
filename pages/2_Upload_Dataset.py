@@ -188,14 +188,14 @@ if uploaded_file is not None:
                 pipeline = TrainingPipeline(dataset_path=file_path)
                 results = pipeline.run_training()
                 st.session_state.model_results = results
-
+              
                 # Display Model Metrics
                 st.success("Model training completed successfully!")
-                st.write("### Training Metrics:")
-                st.write(f"- **Accuracy**: {results['test_accuracy']:.3f}")
-                st.write(f"- **Precision**: {results['precision']:.3f}")
-                st.write(f"- **Recall**: {results['recall']:.3f}")
-                st.write(f"- **F1 Score**: {results['f1_score']:.3f}")
+                #st.write("### Training Metrics:")
+              #  st.write(f"- **Accuracy**: {results['test_accuracy']:.3f}")
+               # st.write(f"- **Precision**: {results['precision']:.3f}")
+               # st.write(f"- **Recall**: {results['recall']:.3f}")
+               # st.write(f"- **F1 Score**: {results['f1_score']:.3f}")
 
             except Exception as e:
                 st.error(f"An error occurred during training: {e}")
