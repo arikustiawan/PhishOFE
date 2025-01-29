@@ -4,7 +4,6 @@ from sklearn.metrics import roc_curve, auc, precision_recall_curve
 
 st.title("Model Performance Metrics")
 st.sidebar.image("logo.jpg", use_container_width=True)
-st.sidebar.write("Version 1.0 developed by \n Yanche Ari Kustiawan")
 
 # Check if session state has model results
 if "model_results" in st.session_state and st.session_state.model_results:
