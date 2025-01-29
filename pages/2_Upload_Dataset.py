@@ -17,12 +17,15 @@ st.sidebar.image("logo.jpg", use_container_width=True)
 # Ensure the 'dataset' folder exists
 if not os.path.exists("dataset"):
     os.makedirs("dataset")
-
+    
+if "model_results" not in st.session_state:
+    st.session_state.model_results = None
+    
 # File uploader for CSV files
 uploaded_file = st.file_uploader("Upload your dataset (CSV file only)", type=["csv"])
 
 
-# 💡 Class Definition Inside Streamlit App
+# Class Definition Inside Streamlit App
 class TrainingPipeline:
     def __init__(self, dataset_path):
         self.dataset_path = dataset_path
@@ -154,7 +157,7 @@ class TrainingPipeline:
         return metrics_result
 
 
-# 👉 Handling File Upload in Streamlit
+# File Upload in Streamlit
 if uploaded_file is not None:
     # Save the uploaded file in the 'dataset' folder
     file_path = os.path.join("dataset", uploaded_file.name)
@@ -169,14 +172,15 @@ if uploaded_file is not None:
         st.write("### Dataset Preview:")
         st.dataframe(data.head())
 
-        # 🎯 Train Model on Button Click
+        # Train Model
         if st.button("Train Dataset"):
             try:
                 # Initialize TrainingPipeline and Train the Model
                 pipeline = TrainingPipeline(dataset_path=file_path)
                 results = pipeline.run_training()
+                st.session_state.model_results = results
 
-                # 🎉 Display Model Metrics
+                # Display Model Metrics
                 st.success("Model training completed successfully!")
                 st.write("### Training Metrics:")
                 st.write(f"- **Accuracy**: {results['test_accuracy']:.3f}")
