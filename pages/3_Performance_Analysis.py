@@ -19,13 +19,13 @@ if "model_results" in st.session_state and st.session_state.model_results:
     # Ensure session state has y_test and y_pred_prob for plots
     if "y_test" in st.session_state and "y_pred_prob" in st.session_state:
             y_test = st.session_state.y_test
-            y_train = st.session_state.y_train
+            y_pred_prob = st.session_state.y_pred_prob
     
             # Create a figure with 2 subplots (side by side)
             fig, axes = plt.subplots(1, 2, figsize=(12, 5))  # 1 row, 2 columns
     
             # ROC Curve
-            fpr, tpr, _ = roc_curve(y_test, y_train)
+            fpr, tpr, _ = roc_curve(y_test, y_pred_prob)
             roc_auc = auc(fpr, tpr)
     
             axes[0].plot(fpr, tpr, color="blue", lw=2, label=f"ROC curve (AUC = {roc_auc:.4f})")
