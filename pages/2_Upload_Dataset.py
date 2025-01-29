@@ -24,8 +24,8 @@ if "model_results" not in st.session_state:
 if "y_test" not in st.session_state:
     st.session_state.y_test = None
 
-if "y_pred_prob" not in st.session_state:
-    st.session_state.y_pred_prob = None
+if "y_train" not in st.session_state:
+    st.session_state.y_train = None
     
 # File uploader for CSV files
 uploaded_file = st.file_uploader("Upload your dataset (CSV file only)", type=["csv"])
@@ -162,7 +162,7 @@ class TrainingPipeline:
         metrics_result = self.train_model()
 
         st.session_state.y_test = self.y_test
-        st.session_state.y_pred_prob = self.y_pred_prob
+        st.session_state.y_train = self.y_train
         return metrics_result
 
 
