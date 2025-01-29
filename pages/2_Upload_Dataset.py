@@ -11,7 +11,7 @@ from sklearn import metrics
 from lightgbm import LGBMClassifier
 
 # Streamlit App Title and Sidebar
-st.title("Phishing URL Detection - Training Pipeline")
+st.title("Upload Dataset & Model Training")
 st.sidebar.image("logo.jpg", use_container_width=True)
 
 # Ensure the 'dataset' folder exists
