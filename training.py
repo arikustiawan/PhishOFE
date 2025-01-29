@@ -120,6 +120,11 @@ class TrainingPipeline:
         print(f"Training Accuracy: {train_acc:.3f}")
         print(f"Test Accuracy: {test_acc:.3f}")
 
+        # Save the trained model using pickle
+        with open('model.pkl', 'wb') as model_file:
+            pickle.dump(self.model, model_file)
+        #print("Model has been saved as 'model.pkl'")
+
         return {
             "train_accuracy": train_acc,
             "test_accuracy": test_acc,
