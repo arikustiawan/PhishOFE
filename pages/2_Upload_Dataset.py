@@ -193,9 +193,9 @@ class TrainingPipeline:
         print(f"Test Accuracy: {test_acc:.3f}")
 
         # Save model to main path
-        model_path = os.path.join(os.getcwd(), "model.pkl")
-        with open(model_path, 'wb') as file:
-            pickle.dump(self.model, file)
+       # model_path = os.path.join(os.getcwd(), "model.pkl")
+       # with open(model_path, 'wb') as file:
+        #    pickle.dump(self.model, file)
 
         return {
             "train_accuracy": train_acc,
