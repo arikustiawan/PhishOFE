@@ -8,7 +8,7 @@ from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from collections import defaultdict
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
-from lightgbm import LGBMClassifier
+from lightgbm import CatBoostClassifier
 
 # Streamlit App Title and Sidebar
 st.title("Upload Dataset & Model Training")
@@ -114,7 +114,7 @@ class TrainingPipeline:
             n_jobs=-1,
             class_weight="balanced_subsample",
             max_depth=5,
-            n_estimators=100 
+            n_estimators="auto"
         )
         feat_selector = BorutaPy(rf, n_estimators='auto', random_state=1)
         feat_selector.fit(X.values, y.values.ravel())
@@ -132,18 +132,61 @@ class TrainingPipeline:
         print("Data split into training and test sets.")
 
     def train_model(self):
-        #Train the LightGBM model.
-        self.model = LGBMClassifier(n_estimators=100, learning_rate=0.1, max_depth=-1, random_state=42)
-        self.model.fit(self.X_train, self.y_train)
+        #Train the CatBoost model.
+        #self.model = LGBMClassifier(n_estimators=100, learning_rate=0.1, max_depth=-1, random_state=42)
+        #self.model.fit(self.X_train, self.y_train)
 
+        #y_train_pred = self.model.predict(self.X_train)
+        #y_test_pred = self.model.predict(self.X_test)
+
+        #self.y_pred_prob = self.model.predict_proba(self.X_test)[:, 1]  # Get probabilities
+
+        #train_acc = metrics.accuracy_score(self.y_train, y_train_pred)
+        #test_acc = metrics.accuracy_score(self.y_test, y_test_pred)
+
+        # Instantiate the CatBoost model
+        catB = CatBoostClassifier(verbose=False)
+    
+        # Define the parameter grid for hyperparameter tuning
+        param_catB = {
+            'learning_rate': [0.05, 0.1],
+            'depth': [6, 8],
+            'iterations': [200, 500],
+            'l2_leaf_reg': [1, 3],
+            'border_count': [32, 64]
+        }
+    
+        # Instantiate GridSearchCV
+        grid_searchCB = GridSearchCV(
+            estimator=catB,
+            param_grid=param_catB,
+            scoring='accuracy',
+            cv=3,
+            n_jobs=-1,
+            verbose=0
+        )
+    
+        # Perform the grid search
+        grid_searchCB.fit(self.X_train, self.y_train)
+    
+        # Get the best model
+        self.model = grid_searchCB.best_estimator_
+    
+        # Fit the best model on the training set
+        self.model.fit(self.X_train, self.y_train)
+    
+        # Predictions
         y_train_pred = self.model.predict(self.X_train)
         y_test_pred = self.model.predict(self.X_test)
-
-        self.y_pred_prob = self.model.predict_proba(self.X_test)[:, 1]  # Get probabilities
+    
+        # Predicted probabilities for positive class
+        
+        self.y_pred_prob = self.model.predict_proba(self.X_test)[:, 1]
 
         train_acc = metrics.accuracy_score(self.y_train, y_train_pred)
         test_acc = metrics.accuracy_score(self.y_test, y_test_pred)
 
+        # Accuracy scores
         print(f"Training Accuracy: {train_acc:.3f}")
         print(f"Test Accuracy: {test_acc:.3f}")
 
