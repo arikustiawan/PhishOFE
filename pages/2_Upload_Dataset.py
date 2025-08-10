@@ -147,7 +147,7 @@ class TrainingPipeline:
         #test_acc = metrics.accuracy_score(self.y_test, y_test_pred)
 
         # Instantiate the CatBoost model
-        seld.model = CatBoostClassifier(verbose=False, learning_rate=0.1, dept=8, iterations=200,l2_leaf_reg=1,border_count=32)
+        seld.model = CatBoostClassifier(verbose=False, learning_rate=0.1, depth=8, iterations=200,l2_leaf_reg=1,border_count=32)
         """
         # Define the parameter grid for hyperparameter tuning
         param_catB = {
