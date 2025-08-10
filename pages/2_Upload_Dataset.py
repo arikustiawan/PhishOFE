@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import pickle
 import os
 import numpy as np
 from boruta import BorutaPy
