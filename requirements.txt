@@ -9,3 +9,4 @@ lightgbm
 boruta
 matplotlib
 seaborn
+catboost
