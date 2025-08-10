@@ -147,8 +147,8 @@ class TrainingPipeline:
         #test_acc = metrics.accuracy_score(self.y_test, y_test_pred)
 
         # Instantiate the CatBoost model
-        catB = CatBoostClassifier(verbose=False)
-    
+        seld.model = CatBoostClassifier(verbose=False, learning_rate=0.1, dept=8, iterations=200,l2_leaf_reg=1,border_count=32)
+        """
         # Define the parameter grid for hyperparameter tuning
         param_catB = {
             'learning_rate': [0.05, 0.1],
@@ -172,9 +172,9 @@ class TrainingPipeline:
         grid_searchCB.fit(self.X_train, self.y_train)
     
         # Get the best model
-        self.model = grid_searchCB.best_estimator_
-    
-        # Fit the best model on the training set
+        self.model = catB.best_estimator_
+        """
+        # Fit the model on the training set
         self.model.fit(self.X_train, self.y_train)
     
         # Predictions
@@ -182,7 +182,6 @@ class TrainingPipeline:
         y_test_pred = self.model.predict(self.X_test)
     
         # Predicted probabilities for positive class
-        
         self.y_pred_prob = self.model.predict_proba(self.X_test)[:, 1]
 
         train_acc = metrics.accuracy_score(self.y_train, y_train_pred)
@@ -193,9 +192,9 @@ class TrainingPipeline:
         print(f"Test Accuracy: {test_acc:.3f}")
 
         # Save model to main path
-       # model_path = os.path.join(os.getcwd(), "model.pkl")
-       # with open(model_path, 'wb') as file:
-        #    pickle.dump(self.model, file)
+        model_path = os.path.join(os.getcwd(), "model.pkl")
+        with open(model_path, 'wb') as file:
+            pickle.dump(self.model, file)
 
         return {
             "train_accuracy": train_acc,
