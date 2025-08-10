@@ -76,7 +76,7 @@ if st.button("Check URL"):
 
             #y_prob_phishing = model.predict_proba(x)[0,1]
             #y_prob_non_phishing = model.predict_proba(x)[0,0]
-            y_prob_phishing = model.predict_proba(x)
+            y_prob_phishing = model.predict_proba(x)[0,1]
             #y_prob_non_phishing = model.predict_proba(x)[0,0]
             st.write(y_prob_phishing)
             #st.write(y_prob_non_phishing)
