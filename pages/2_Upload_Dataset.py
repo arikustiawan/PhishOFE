@@ -8,7 +8,7 @@ from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from collections import defaultdict
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
-from lightgbm import CatBoostClassifier
+from catboost import CatBoostClassifier
 
 # Streamlit App Title and Sidebar
 st.title("Upload Dataset & Model Training")
