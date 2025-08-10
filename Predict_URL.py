@@ -76,14 +76,14 @@ if st.button("Check URL"):
 
             #y_prob_phishing = model.predict_proba(x)[0,1]
             #y_prob_non_phishing = model.predict_proba(x)[0,0]
-            y_prob_phishing = model.predict_proba(x)[0,1]
+            y_prob_phishing = model.predict_proba(x)
             #y_prob_non_phishing = model.predict_proba(x)[0,0]
             st.write(y_prob_phishing)
             #st.write(y_prob_non_phishing)
             
             # Display the result
-            pred = y_prob_phishing*100
-            pred2 = y_prob_non_phishing*100
+            #pred = y_prob_phishing*100
+            #pred2 = y_prob_non_phishing*100
             #st.success({pred})
             #st.success({pred2})
             result = "Phishing" if pred == pred else "Legitimate"
