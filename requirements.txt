@@ -10,3 +10,4 @@ boruta
 matplotlib
 seaborn
 catboost
+pickle
